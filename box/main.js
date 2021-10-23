@@ -900,7 +900,8 @@
                 const cat = filesCategories.filter(e => {
                     return e.id == files[selectedIndex].catid
                 })
-                tdValue.innerText = cat[0].name
+                if (cat[0] == null || cat[0] == undefined) tdValue.innerText = ''
+                else tdValue.innerText = cat[0].name
             }
 
             tr.appendChild(tdName)
