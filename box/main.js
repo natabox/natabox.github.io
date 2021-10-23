@@ -46,7 +46,7 @@
 
     logoutBtn.onclick = () => {
         localStorage.removeItem('account')
-        window.location.href = window.location.href.replace('box', 'account')
+        window.location.href = window.location.href.replace('/box', '/account')
     }
 
     const langs = {
@@ -716,7 +716,7 @@
                             const href = window.location.href
                             spinner.remove()
                             span.innerText = texts.Succeslink
-                            input.value = `${href.split('box')[0]}box/file/?=${res.param}`
+                            input.value = `${href.split('/box')[0]}/box/file/?=${res.param}`
                             innerDiv.appendChild(input)
                             innerDiv.appendChild(copyBtn)
                         }).catch(err => {

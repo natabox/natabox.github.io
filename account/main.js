@@ -53,7 +53,7 @@
                     email: u,
                     password: p
                 })))
-                window.location.href = window.location.href.replace('account', 'box')
+                window.location.href = window.location.href.replace('/account', '/box')
             }
         }).catch((err) => {
             console.error(err)
