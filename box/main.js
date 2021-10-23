@@ -320,6 +320,14 @@
 
 
     function renderAll() {
+        const contextMenus = document.querySelectorAll('.context-menu')
+        const tooltips = document.querySelectorAll('.tooltip')
+        for (let i = 0; i < contextMenus.length; i++) {
+            contextMenus[i].remove()
+        }
+        for (let i = 0; i < tooltips.length; i++) {
+            tooltips[i].remove()
+        }
         searchInput.value = ''
         sortBy(sortMethod)
         filesContainer.innerHTML = ''
