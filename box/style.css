@@ -339,6 +339,10 @@ body {
     animation: popup 0.2s ease forwards;
 }
 
+.confirm {
+    align-items: center;
+}
+
 .confirm .btns {
     width: 100%;
     display: flex;

@@ -853,6 +853,11 @@
             backdrop.remove()
         }
         yesBtn.onclick = () => {
+            const spinner = document.createElement('div')
+            spinner.className = 'spinner'
+            buttons.remove()
+            paragraph.remove()
+            confirmation.appendChild(spinner)
             const acc = JSON.parse(decrypt(localStorage.getItem('account')))
             fetch(`${url}/files/${files[selectedIndex].id}`, {
                 method: 'DELETE',
@@ -862,8 +867,8 @@
                 }
             }).then(() => {
                 getAllFiles()
+                backdrop.remove()
             })
-            backdrop.remove()
         }
         document.body.appendChild(backdrop)
     }
