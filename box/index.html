@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    if (localStorage.getItem('account') == null) {
+        window.location.href = window.location.href.replace('box', 'account')
+    }
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natabox</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js"></script>
+    <script src="file.js" defer></script>
+    <script src="main.js" defer></script>
+    <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <label for="upload" class="upload__btn">
+            <p>Upload</p>
+            <input type="file" id="upload" name="upload" multiple>
+        </label>
+        <div class="search">
+            <ion-icon name="ios-search"></ion-icon>
+            <input type="text" name="search" id="search" placeholder="Search files">
+        </div>
+        <div class="lang brazil">
+            <img src="assets/img/icons/brazil.svg" class="brazil">
+            <img src="assets/img/icons/usa.svg" class="usa">
+            <img src="assets/img/icons/japan.svg" class="japan">
+            <img src="assets/img/icons/russia.svg" class="russia">
+        </div>
+        <div class="logout">
+            <ion-icon name="ios-log-out"></ion-icon>
+        </div>
+    </header>
+    <div class="options">
+        <form>
+            <label for="sort">
+                <span>Sort by</span>
+                <select name="sort" id="sort">
+                    <option value="name">Name</option>
+                    <option value="size">Size</option>
+                    <option value="type">Type</option>
+                    <option value="date">Date</option>
+                </select>
+            </label>
+            <label for="order">
+                <span>Order</span>
+                <select name="order" id="order">
+                    <option value="1">Ascending</option>
+                    <option value="-1">Descending</option>
+                </select>
+            </label>
+            <label for="preview">
+                <span>Images preview</span>
+                <input type="checkbox" name="preview" id="preview" checked>
+            </label>
+        </form>
+    </div>
+    <div class="files"></div>
+    <div class="drop">
+        <div class="drop__inner">
+            Drop here to upload
+        </div>
+    </div>
+    <div class="uploading">
+        <div class="spinner"></div>
+        <p>Uploading...</p>
+    </div>
+    <div class="drop-area"></div>
+</body>
+
+</html>
