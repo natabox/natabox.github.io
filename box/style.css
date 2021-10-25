@@ -486,7 +486,7 @@ body {
     align-items: center;
     gap: 20px;
     border-radius: var(--main-roundness);
-    background-color: var(--file-bg-blue);
+    background-color: var(--bg-main);
     /* background-color: hsl(0 0% 90%); */
     cursor: pointer;
     transition: all 0.2s ease;
@@ -495,7 +495,6 @@ body {
 
 .categories .category.add {
     margin-top: 15px;
-    background-color: var(--file-bg-blue);
 }
 
 .categories .category:hover {
@@ -509,10 +508,11 @@ body {
     align-items: center;
     border-radius: 100px;
     padding: 5px;
+    transition: background-color 0.2s ease;
 }
 
 .categories .category .delete:hover {
-    background-color: hsl(0 0% 85%);
+    background-color: hsl(215 21% 20%);
 }
 
 .categories .category ion-icon {
@@ -843,8 +843,8 @@ header .search input:focus {
 .drop {
     position: fixed;
     inset: 100px 150px;
-    background-color: hsl(0 0% 80% / 60%);
-    backdrop-filter: blur(3px);
+    background-color: hsl(0 0% 10% / 60%);
+    backdrop-filter: blur(5px);
     border-radius: 20px;
     box-shadow: var(--main-shadow);
     transform: translateY(200%);
@@ -965,7 +965,7 @@ img.visualize {
 }
 
 .visualize.empty {
-    background-color: white;
+    background-color: var(--bg-alt);
     border-radius: var(--main-roundness);
     padding: 50px;
     font-size: 1.5rem;
