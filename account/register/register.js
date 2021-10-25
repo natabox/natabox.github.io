@@ -1,4 +1,4 @@
-(() => {
+let recaptchaCallback(() => {
     const welcomeSpan = document.querySelector('span.welcome')
     typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200)
 
@@ -194,7 +194,7 @@
         form.appendChild(recap)
     }
 
-    function recaptchaCallback() {
+    recaptchaCallback = function recaptchaCallback() {
         console.log('recaptcha')
         createButton(document.querySelector('form.reg'))
     }
