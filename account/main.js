@@ -5,7 +5,15 @@
     const login_form = document.querySelector('.login')
     const login_email = document.querySelector('.login input[name="email"]')
     const login_password = document.querySelector('.login input[name="password"]')
+    const login_btn = document.querySelector('.login button.submit')
 
+    let logging = false
+
+    const error = document.createElement('div')
+    error.className = 'error'
+
+    const spinner = document.createElement('div')
+    spinner.className = 'spinner'
 
     login_form.onsubmit = e => {
         e.preventDefault()
@@ -13,6 +21,11 @@
     }
 
     function login(u, p) {
+        if (logging) return
+        logging = true
+        login_btn.innerText = ''
+        login_btn.appendChild(spinner)
+        error.remove()
         fetch(url + "/users/login", {
             method: "GET",
             headers: {
@@ -21,22 +34,21 @@
                 'Password': p
             }
         }).then((res) => {
-            console.log(res)
-
-            if (res.status == '404') return "usuario ou senha incorretos"
+            if (res.status == '404') throw new Error("Usuário ou senha incorretos")
             return res.json()
         }).then(result => {
-            if (typeof result == 'string') {
-                console.log(result)
-            } else {
-                localStorage.setItem('account', encrypt(JSON.stringify({
-                    email: u,
-                    password: p
-                })))
-                window.location.href = window.location.href.replace('/account', '/box')
-            }
+            console.log(result)
+            localStorage.setItem('account', encrypt(JSON.stringify({
+                email: u,
+                password: p
+            })))
+            window.location.href = window.location.href.replace('/account', '/box')
         }).catch((err) => {
-            console.error(err)
+            error.innerText = err.message
+            document.body.appendChild(error)
+            spinner.remove()
+            login_btn.innerText = 'Login'
+            logging = false
         })
     }
 
