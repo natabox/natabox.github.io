@@ -220,3 +220,24 @@ div.register>a:hover {
     justify-content: center;
     align-items: center;
 }
+
+canvas {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    pointer-events: none;
+    z-index: -1;
+}
+
+img.glow {
+    position: fixed;
+    width: 200%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -2;
+}
