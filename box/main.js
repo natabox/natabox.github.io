@@ -1,6 +1,6 @@
 (() => {
-    // const url = 'http://localhost:3000'
-    const url = 'https://natabox.herokuapp.com'
+    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
+    const url = urls[0]
 
     const filesContainer = document.querySelector('.files')
     const filesInput = document.querySelector('input#upload')
@@ -596,7 +596,7 @@
                                     .then((e) => e.json())
                                     .then(result => {
                                         newCat.remove()
-                                        reloadCategories(false)
+                                        reloadCategories()
                                     })
                             }
 
@@ -965,6 +965,12 @@
     }, false)
 
     function uploadFiles(recievedFiles) {
+        for (let i = 0; i < recievedFiles.length; i++) {
+            if (recievedFiles[i].type == '') {
+                showError('Tipo de arquivo não suportado')
+                return
+            }
+        }
         uploading.classList.add('show')
         const acc = JSON.parse(decrypt(localStorage.getItem('account')))
         const formData = new FormData()
@@ -1005,22 +1011,7 @@
             .catch(err => {
                 console.error('Error:', err)
                 uploading.classList.remove('show')
-                const errorEl = document.createElement('div')
-                errorEl.className = 'error'
-
-                errorEl.appendChild(createIcon('close-circle-outline'))
-
-                const p = document.createElement('p')
-
-                p.innerText = texts.Limit
-
-                errorEl.appendChild(p)
-
-                document.body.appendChild(errorEl)
-
-                document.addEventListener('click', () => {
-                    errorEl.remove()
-                })
+                showError(texts.Limit)
             })
     }
 
@@ -1028,6 +1019,20 @@
         const icon = document.createElement('ion-icon')
         icon.setAttribute('name', name)
         return icon
+    }
+
+    function showError(msg) {
+        uploading.classList.remove('show')
+        const errorEl = document.createElement('div')
+        errorEl.className = 'error'
+        errorEl.appendChild(createIcon('close-circle-outline'))
+        const p = document.createElement('p')
+        p.innerText = msg
+        errorEl.appendChild(p)
+        document.body.appendChild(errorEl)
+        document.addEventListener('click', () => {
+            errorEl.remove()
+        })
     }
 
 

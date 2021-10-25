@@ -2,7 +2,8 @@
     const welcomeSpan = document.querySelector('span.welcome')
     typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200)
 
-    const url = 'https://natabox.herokuapp.com'
+    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
+    const url = urls[0]
 
     let registering = false
 
@@ -197,7 +198,7 @@
     }
 
     function checkEmail(text) {
-        return (text.includes('@') && text.includes('.') && text.length >= 5 && text.charAt(text.length - 1) != '.')
+        return (text.includes('@') && text.includes('.') && text.length >= 5 && text.length <= 40 && text.charAt(text.length - 1) != '.')
     }
 
     function checkPassword(text) {
@@ -205,7 +206,7 @@
     }
 
     function checkName(text) {
-        return (text.length >= 3 && text.length <= 20)
+        return (text.length >= 3 && text.length <= 30)
     }
 
     function register(btn, user) {

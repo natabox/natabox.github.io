@@ -8,18 +8,24 @@
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../main.css">
     <script src="main.js" defer></script>
 </head>
 
 <body>
-    <form class="login">
-        <h1>Login</h1>
-        <input type="email" placeholder="email" name="email" required>
-        <input type="password" placeholder="password" name="password" required>
-        <br>
-        <input type="submit" value="Login" name="submit">
-    </form>
-    <a href="register">Register</a>
+    <a href="../"><img src="assets/img/logo.png" alt="logo Technata"></a>
+    <h1>Login</h1>
+    <div class="login">
+        <form>
+            <label>Endereço de email <input type="text" name="email" required></label>
+            <label>Senha <input type="password" name="password" required></label>
+            <input type="submit" value="Login" name="submit">
+        </form>
+    </div>
+    <div class="registro">
+        <label>Não tem uma conta? <a href="register">Crie uma →</a></label>
+    </div>
 </body>
 
 </html>

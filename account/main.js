@@ -1,5 +1,6 @@
 (() => {
-    const url = 'https://natabox.herokuapp.com'
+    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
+    const url = urls[0]
 
     const login_form = document.querySelector('.login')
     const login_email = document.querySelector('.login input[name="email"]')

@@ -21,14 +21,6 @@
     --bigger-font-size: 1.8rem;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    border: none;
-    outline: none;
-    font-family: var(--main-font);
-}
 
 body {
     min-height: 100vh;
@@ -47,9 +39,10 @@ header {
     display: flex;
     color: var(--main-font-color);
     font-size: var(--main-font-size);
+    align-items: center;
 }
 
-header>a {
+header>a.login {
     margin-left: auto;
     text-decoration: none;
     color: var(--main-font-color);
@@ -58,6 +51,32 @@ header>a {
 
 header>a:hover {
     text-decoration: underline;
+}
+
+header img {
+    width: 100%;
+    max-width: 75px;
+    background-color: var(--title-alt);
+    border-radius: var(--small-roundness);
+}
+
+span.welcome {
+    word-break: break-word;
+}
+
+span.welcome::after {
+    content: '|';
+    animation: blink 0.7s infinite ease;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 div.register {

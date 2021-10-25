@@ -1,10 +1,13 @@
 :root {
-    --file-bg: 0 0% 100%;
+    /* --file-bg: 0 0% 100%; */
+    --file-bg: var(--bg-alt);
     --file-bg-alt: 0 0% 88%;
-    --file-bg-blue: 218 92% 95%;
+    --file-bg-blue: hsl(222 58% 17%);
+    /* --file-bg-blue: 218 92% 95%; */
     --file-bg-blue-alt: 215 68% 57%;
     --file-bg-blue-alt2: 215 68% 63%;
-    --file-border: 0 0% 70%;
+    /* --file-border: 0 0% 70%; */
+    --file-border: var(--border-main);
     --file-selected-border: 215 68% 53%;
     --upload-bg: 215 68% 57%;
     --upload-bg-alt: 218 92% 65%;
@@ -14,19 +17,12 @@
     --alt-roundness: 20px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    outline: none;
-    border: none;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: var(--bg-main);
+    color: var(--main-font-color);
 }
 
 .hidden {
@@ -45,14 +41,14 @@ body {
 
 .file {
     overflow: hidden;
-    background-color: hsl(var(--file-bg));
+    background-color: var(--file-bg);
     display: flex;
     flex-direction: column;
     height: 200px;
     width: 100%;
     max-width: 250px;
     border-radius: var(--main-roundness);
-    border: 2px solid hsl(var(--file-border));
+    border: 2px solid var(--file-border);
     animation: popup 0.2s ease;
     box-shadow: var(--main-shadow);
     transform-origin: center;
@@ -69,8 +65,8 @@ body {
 }
 
 .file:hover .file__name {
-    border-top: 1px solid hsl(var(--file-selected-border));
-    background-color: hsl(var(--file-bg-blue));
+    border-top-color: hsl(var(--file-selected-border));
+    background-color: var(--file-bg-blue);
 }
 
 .file .file__img {
@@ -141,10 +137,11 @@ body {
     flex: 30%;
     font-size: 1.2rem;
     width: 100%;
-    border-top: 1px solid hsl(var(--file-border));
+    border-top: 1px solid var(--file-border);
     padding: 5px 10px;
     position: relative;
     display: flex;
+    transition: all 0.2s ease;
     align-items: center;
 }
 
@@ -157,7 +154,7 @@ body {
 .tooltip {
     position: fixed;
     border: 1px solid hsl(var(--file-selected-border));
-    background-color: hsl(var(--file-bg));
+    background-color: var(--file-bg);
     padding: 1px 5px;
     border-radius: var(--main-roundness);
     word-break: normal !important;
@@ -171,7 +168,7 @@ body {
 .context-menu {
     position: fixed;
     border: 1px solid hsl(var(--file-selected-border));
-    background-color: hsl(var(--file-bg));
+    background-color: var(--file-bg);
     border-radius: var(--main-roundness);
     overflow: hidden;
     display: flex;
@@ -252,7 +249,7 @@ body {
 }
 
 .context-menu>*:hover {
-    background-color: hsl(var(--file-bg-blue));
+    background-color: var(--file-bg-blue);
 }
 
 .context-menu>*::before {
@@ -267,11 +264,11 @@ body {
 }
 
 .context-menu>.context-menu__download::before {
-    background-image: url(assets/img/icons/download.png);
+    background-image: url(assets/img/icons/download.svg);
 }
 
 .context-menu>.context-menu__delete::before {
-    background-image: url(assets/img/icons/delete.png);
+    background-image: url(assets/img/icons/trash.svg);
 }
 
 .context-menu>.context-menu__info::before {
@@ -328,7 +325,8 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    background-color: hsl(0 0% 100%);
+    background-color: var(--bg-alt);
+    /* background-color: hsl(0 0% 100%); */
     padding: 25px;
     font-size: 1.3rem;
     border-radius: var(--alt-roundness);
@@ -357,10 +355,11 @@ body {
     cursor: pointer;
     border-radius: var(--main-roundness);
     transition: background-color 0.2s ease;
+    background-color: var(--bg-main);
 }
 
 .confirm .btns button:hover {
-    outline: hsl(var(--file-border) / 70%) solid 1px;
+    outline: var(--file-border) solid 1px;
     z-index: 1;
 }
 
@@ -373,11 +372,11 @@ body {
 }
 
 .confirm .btns button:nth-child(1):hover {
-    background-color: hsl(0 50% 90%);
+    background-color: hsl(0 78% 7%);
 }
 
 .confirm .btns button:nth-child(2):hover {
-    background-color: hsl(100 50% 90%);
+    background-color: hsl(100 78% 7%);
 }
 
 .properties tr>td:first-child {
@@ -412,11 +411,12 @@ body {
     align-items: center;
     transition: background-color 0.2s ease;
     color: hsl(0 100% 50%);
+    background-color: transparent;
 }
 
 
 .closebtn:hover {
-    background-color: hsl(0 0% 86%);
+    background-color: var(--file-bg-blue);
 }
 
 .generate-link {
@@ -449,7 +449,7 @@ body {
     flex: 1;
     padding: 10px 20px;
     border-radius: var(--main-roundness);
-    border: 2px solid hsl(var(--file-border));
+    border: 2px solid var(--file-border);
     font-size: 1rem;
 }
 
@@ -486,7 +486,8 @@ body {
     align-items: center;
     gap: 20px;
     border-radius: var(--main-roundness);
-    background-color: hsl(0 0% 90%);
+    background-color: var(--file-bg-blue);
+    /* background-color: hsl(0 0% 90%); */
     cursor: pointer;
     transition: all 0.2s ease;
     transform-origin: center;
@@ -494,7 +495,7 @@ body {
 
 .categories .category.add {
     margin-top: 15px;
-    background-color: hsl(0 0% 89%);
+    background-color: var(--file-bg-blue);
 }
 
 .categories .category:hover {
@@ -551,6 +552,9 @@ body {
 
 .create-category form input {
     font-size: 1.2rem;
+    background-color: var(--bg-main);
+    color: var(--main-font-color);
+    border: 1px solid var(--border-main);
 }
 
 .create-category form label {
@@ -565,7 +569,7 @@ body {
 .create-category form label input#name {
     flex: 1;
     border-radius: var(--main-roundness);
-    border: 1px solid hsl(var(--file-border));
+    border: 1px solid var(--file-border);
     padding: 5px 10px;
     transition: box-shadow 0.2s ease;
 }
@@ -643,14 +647,14 @@ input[name="upload"] {
     width: 30px;
     display: inline-block;
     margin: 0 15px 0 0;
-    background-image: url(assets/img/icons/upload.png);
+    background-image: url(assets/img/icons/upload.svg);
 }
 
 .options {
     min-height: 40px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid hsl(var(--file-border) / 70%)
+    border-bottom: 1px solid var(--file-border)
         /* hsl(0 0% 70% / 50%) */
     ;
     gap: 20px;
@@ -662,15 +666,17 @@ input[name="upload"] {
 .options select {
     font-size: 1rem;
     border-radius: var(--main-roundness);
-    border: 1px solid hsl(var(--file-border) / 70%);
+    border: 1px solid var(--file-border);
     padding: 5px 10px;
+    background-color: var(--bg-alt);
+    color: var(--main-font-color);
 }
 
 header {
     height: 80px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid hsl(var(--file-border) / 70%)
+    border-bottom: 1px solid var(--file-border)
         /* hsl(0 0% 70% / 50%) */
     ;
     gap: 20px;
@@ -702,11 +708,16 @@ header .search input {
     border-radius: var(--main-roundness);
     width: 100%;
     transition: all 0.1s ease;
+    background-color: var(--bg-main);
+    color: var(--main-font-color);
+    border: 1px solid transparent;
 }
 
 header .search input:focus {
     box-shadow: var(--main-shadow);
-    background-color: hsl(0 0% 93%);
+    background-color: var(--bg-alt);
+    /* background-color: hsl(0 0% 93%); */
+    border: 1px solid var(--border-main);
 }
 
 .lang {
@@ -885,7 +896,7 @@ header .search input:focus {
     left: 50%;
     top: 50px;
     transform: translateX(-50%);
-    background-color: hsl(var(--file-bg-alt));
+    background-color: var(--bg-alt);
     padding: 20px 40px;
     border-radius: var(--main-roundness);
     box-shadow: var(--main-shadow);
