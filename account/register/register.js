@@ -1,4 +1,3 @@
-let recaptchaCallback = undefined;
 (() => {
     const welcomeSpan = document.querySelector('span.welcome')
     typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200)
@@ -185,6 +184,7 @@ let recaptchaCallback = undefined;
     }
 
     function createRecaptcha(form) {
+        if (document.querySelector('.g-recaptcha') != null) return
         const script = document.createElement('script')
         script.src = "https://www.google.com/recaptcha/api.js"
         form.appendChild(script)
@@ -193,9 +193,19 @@ let recaptchaCallback = undefined;
         recap.setAttribute('data-sitekey', '6LeKMfIcAAAAAEJ187n-rEXYt4mvf1vPniEck9yk')
         recap.setAttribute('data-callback', 'recaptchaCallback')
         form.appendChild(recap)
+        testCaptcha()
     }
 
-    recaptchaCallback = function recaptchaCallback() {
+    function testCaptcha() {
+        let inter = setInterval(() => {
+            if (grecaptcha.getResponse().length > 0) {
+                recaptchaCallback()
+                clearInterval(inter)
+            }
+        }, 100)
+    }
+
+    function recaptchaCallback() {
         console.log('recaptcha')
         createButton(document.querySelector('form.reg'))
     }
