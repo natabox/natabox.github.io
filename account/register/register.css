@@ -213,3 +213,10 @@ div.register>a {
 div.register>a:hover {
     text-decoration: underline;
 }
+
+.g-recaptcha {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

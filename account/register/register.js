@@ -191,22 +191,24 @@
         const recap = document.createElement('div')
         recap.className = 'g-recaptcha'
         recap.setAttribute('data-sitekey', '6LeKMfIcAAAAAEJ187n-rEXYt4mvf1vPniEck9yk')
-        recap.setAttribute('data-callback', 'recaptchaCallback')
         form.appendChild(recap)
         testCaptcha()
     }
 
     function testCaptcha() {
         let inter = setInterval(() => {
-            if (grecaptcha.getResponse().length > 0) {
-                recaptchaCallback()
-                clearInterval(inter)
+            try {
+                if (grecaptcha.getResponse().length > 0) {
+                    recaptchaCallback()
+                    clearInterval(inter)
+                }
+            } catch (e) {
+
             }
-        }, 100)
+        }, 200)
     }
 
     function recaptchaCallback() {
-        console.log('recaptcha')
         createButton(document.querySelector('form.reg'))
     }
 
