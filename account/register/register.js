@@ -1,4 +1,5 @@
-let recaptchaCallback(() => {
+let recaptchaCallback = undefined;
+(() => {
     const welcomeSpan = document.querySelector('span.welcome')
     typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200)
 
