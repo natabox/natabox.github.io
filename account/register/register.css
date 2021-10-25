@@ -21,6 +21,9 @@
     --bigger-font-size: 1.8rem;
 }
 
+.hidden {
+    display: none;
+}
 
 body {
     min-height: 100vh;

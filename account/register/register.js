@@ -28,6 +28,7 @@
 
     function startForm() {
         const form = document.createElement('form')
+        form.className = 'reg'
         form.onsubmit = e => e.preventDefault()
         createEmail(form)
         document.querySelector('.register').appendChild(form)
@@ -150,7 +151,8 @@
         input.type = 'text'
 
         input.onkeydown = (evt) => {
-            if (evt.key === 'Enter' && correct) createButton(form)
+            // if (evt.key === 'Enter' && correct) createButton(form)
+            if (evt.key === 'Enter' && correct) createRecaptcha(form)
         }
 
         input.oninput = () => {
@@ -167,7 +169,8 @@
         btn.innerText = 'Continuar'
 
         btn.onclick = () => {
-            if (correct) createButton(form)
+            // if (correct) createButton(form)
+            if (correct) createRecaptcha(form)
         }
 
         inputsContainer.appendChild(input)
@@ -178,6 +181,22 @@
 
         form.appendChild(nameContainer)
         input.focus()
+    }
+
+    function createRecaptcha(form) {
+        const script = document.createElement('script')
+        script.src = "https://www.google.com/recaptcha/api.js"
+        form.appendChild(script)
+        const recap = document.createElement('div')
+        recap.className = 'g-recaptcha'
+        recap.setAttribute('data-sitekey', '6LeKMfIcAAAAAEJ187n-rEXYt4mvf1vPniEck9yk')
+        recap.setAttribute('data-callback', 'recaptchaCallback')
+        form.appendChild(recap)
+    }
+
+    function recaptchaCallback() {
+        console.log('recaptcha')
+        createButton(document.querySelector('form.reg'))
     }
 
     function createButton(form) {
@@ -221,6 +240,7 @@
         if (grecaptcha.getResponse().length == 0) {
             error.innerText = 'Complete o ReCaptcha'
             document.body.appendChild(error)
+            btn.innerText = 'Criar conta'
             return
         }
 
