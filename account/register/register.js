@@ -217,6 +217,13 @@
         btn.innerText = ''
         btn.appendChild(spinner)
 
+        grecaptcha.getResponse()
+        if (grecaptcha.getResponse().length == 0) {
+            error.innerText = 'Complete o ReCaptcha'
+            document.body.appendChild(error)
+            return
+        }
+
         fetch(url + "/users", {
                 method: "POST",
                 headers: {
@@ -257,6 +264,10 @@
         loginBtn.innerText = 'Login →'
         parentEl.innerText = 'Usuário cadastrado com sucesso\n'
         parentEl.appendChild(loginBtn)
+    }
+
+    function recaptchaError() {
+        console.log('Recapcha erro')
     }
 
     class User {
