@@ -249,7 +249,6 @@
         btn.innerText = ''
         btn.appendChild(spinner)
 
-        grecaptcha.getResponse()
         if (grecaptcha.getResponse().length == 0) {
             error.innerText = 'Complete o ReCaptcha'
             document.body.appendChild(error)
