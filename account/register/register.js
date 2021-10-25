@@ -254,6 +254,7 @@
             error.innerText = 'Complete o ReCaptcha'
             document.body.appendChild(error)
             btn.innerText = 'Criar conta'
+            registering = false
             return
         }
 
