@@ -55,6 +55,7 @@
             Upload: 'Upload',
             Delete: 'Delete',
             Link: 'Generate link',
+            Rename: 'Rename',
             Publiclink: 'This link will be public!',
             Succeslink: 'Successfully generated link',
             Generate: 'Generate',
@@ -90,6 +91,7 @@
             Download: 'Download',
             Upload: 'Upload',
             Delete: 'Excluir',
+            Rename: 'Renomear',
             Link: 'Gerar link',
             Publiclink: 'Este link será público!',
             Succeslink: 'Link gerado com sucesso',
@@ -126,6 +128,7 @@
             Download: 'ダウンロード',
             Upload: 'アップロード',
             Delete: '消去',
+            Rename: '改名する',
             Link: 'リンクを生成する',
             Publiclink: 'このリンクは公開されます!',
             Succeslink: '正常に生成されたリンク',
@@ -162,6 +165,7 @@
             Download: 'скачать',
             Upload: 'загрузить',
             Delete: 'удалять',
+            Rename: 'переименовать',
             Link: 'сгенерировать ссылку',
             Publiclink: 'эта ссылка будет общедоступной!',
             Succeslink: 'успешно сгенерированная ссылка',
@@ -401,6 +405,10 @@
         downloadBtn.className = 'context-menu__download'
         downloadBtn.innerText = texts.Download
 
+        const renameBtn = document.createElement('div')
+        renameBtn.className = 'context-menu__rename'
+        renameBtn.innerText = texts.Rename
+
         const linkBtn = document.createElement('div')
         linkBtn.className = 'context-menu__link'
         linkBtn.innerText = texts.Link
@@ -419,6 +427,7 @@
 
         contextMenu.appendChild(visualizeBtn)
         contextMenu.appendChild(downloadBtn)
+        contextMenu.appendChild(renameBtn)
         contextMenu.appendChild(linkBtn)
         contextMenu.appendChild(categoryBtn)
         contextMenu.appendChild(deleteBtn)
@@ -441,6 +450,7 @@
                 infoBtn.innerText = texts.Properties
                 categoryBtn.innerText = texts.Category
                 linkBtn.innerText = texts.Link
+                renameBtn.innerText = texts.Rename
 
                 selectedElement = e
                 findObject()
@@ -469,11 +479,64 @@
                     tooltip.remove()
                     categories()
                 }
+                renameBtn.onclick = () => {
+                    tooltip.remove()
+                    rename()
+                }
+
                 document.body.appendChild(contextMenu)
                 if (event.changedTouches == undefined)
                     contextMenu.style = `${window.innerHeight - event.clientY > contextMenu.offsetHeight ? 'top: ' + event.clientY : 'bottom: 0'}px; ${window.innerWidth - (event.clientX + 10) > contextMenu.offsetWidth ? 'left: ' + (event.clientX + 10) : 'right: 0'}px;`
                 else
                     contextMenu.style = `${window.innerHeight - event.changedTouches[0].clientY > contextMenu.offsetHeight ? 'top: ' + event.changedTouches[0].clientY : 'bottom: 0'}px; ${window.innerWidth - (event.changedTouches[0].clientX + 10) > contextMenu.offsetWidth ? 'left: ' + (event.changedTouches[0].clientX + 10) : 'right: 0'}px;`
+            }
+
+            function rename() {
+                const backdrop = document.createElement('div')
+                backdrop.className = 'backdrop'
+                backdrop.onclick = e => {
+                    if (e.target == backdrop) backdrop.remove()
+                }
+                const rename = document.createElement('div')
+                rename.className = 'rename'
+                const form = document.createElement('form')
+                const input = document.createElement('input')
+                input.type = 'text'
+                input.value = files[selectedIndex].name.replace(`.${files[selectedIndex].type}`, '')
+                const btn = document.createElement('button')
+                btn.innerText = texts.Rename
+
+                const spinner = document.createElement('div')
+                spinner.className = 'spinner'
+                form.onsubmit = e => {
+                    e.preventDefault()
+                    rename.innerHTML = ''
+                    rename.appendChild(spinner)
+                    fetch(`${url}/files/rename/${files[selectedIndex].id}`, {
+                            method: 'PUT',
+                            headers: {
+                                User: JSON.parse(decrypt(localStorage.getItem('account'))).email,
+                                Password: JSON.parse(decrypt(localStorage.getItem('account'))).password,
+                            },
+                            body: input.value.replace(`.${files[selectedIndex].type}`, '')
+                        })
+                        .then(response => {
+                            if (response.status == 404) throw new Error("Error")
+                            return response.json()
+                        })
+                        .then(res => {
+                            getAllFiles()
+                            backdrop.remove()
+                        })
+                        .catch(err => {
+                            backdrop.remove()
+                        })
+                }
+                form.appendChild(input)
+                form.appendChild(btn)
+                rename.appendChild(form)
+                backdrop.appendChild(rename)
+                document.body.appendChild(backdrop)
             }
 
             function reloadCategories(show) {
@@ -645,6 +708,8 @@
                                             console.error(e)
                                         })
                                 } else {
+                                    categories.innerHTML = ''
+                                    categories.appendChild(spinner)
                                     fetch(`${url}/files/${files[selectedIndex].id}/category/${e.id}`, {
                                             method: 'PUT',
                                             headers: {

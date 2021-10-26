@@ -287,6 +287,10 @@ body {
     background-image: url(assets/img/icons/category.svg);
 }
 
+.context-menu>.context-menu__rename::before {
+    background-image: url(assets/img/icons/rename.svg);
+}
+
 .backdrop {
     width: 100vw;
     height: 100vh;
@@ -318,7 +322,8 @@ body {
 .properties,
 .generate-link,
 .categories,
-.create-category {
+.create-category,
+.rename {
     width: 100vw;
     max-width: 500px;
     max-height: 90vh;
@@ -598,7 +603,53 @@ body {
 
 .create-category input#sub:active {
     background-color: hsl(var(--file-bg-blue-alt2));
+}
 
+.rename {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rename form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.rename form input {
+    width: 100%;
+    border-radius: var(--main-roundness);
+    border: 1px solid var(--file-border);
+    padding: 5px 10px;
+    transition: box-shadow 0.2s ease;
+    min-width: 20px !important;
+    font-size: 1.2rem;
+    background-color: var(--bg-main);
+    color: var(--main-font-color);
+    border: 1px solid var(--border-main);
+}
+
+.rename form input:focus {
+    box-shadow: var(--main-shadow);
+}
+
+.rename form button {
+    background-color: hsl(var(--file-selected-border));
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--main-roundness);
+    cursor: pointer;
+}
+
+.rename form button:hover {
+    background-color: hsl(var(--file-bg-blue-alt));
+
+}
+
+.rename form button:active {
+    background-color: hsl(var(--file-bg-blue-alt2));
 }
 
 input[name="upload"] {
