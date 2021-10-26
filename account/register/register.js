@@ -1,6 +1,6 @@
 (() => {
     const welcomeSpan = document.querySelector('span.welcome')
-    typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200)
+    typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200, 2000)
 
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
     const url = urls[1]
@@ -10,20 +10,22 @@
     const error = document.createElement('div')
     error.className = 'error'
 
-    function typeAnimation(el, text, delay, callback, callbackDelay) {
-        let i = 1
-        el.innerText += text.charAt(0).replace(' ', '\xa0')
-        let anim = setInterval(() => {
-            if (i >= text.length - 1) {
-                clearInterval(anim)
-                try {
-                    setTimeout(callback, callbackDelay)
-                } catch (e) {
+    function typeAnimation(el, text, delay, callback, callbackDelay, startDelay) {
+        setTimeout(() => {
+            let i = 1
+            el.innerText += text.charAt(0).replace(' ', '\xa0')
+            let anim = setInterval(() => {
+                if (i >= text.length - 1) {
+                    clearInterval(anim)
+                    try {
+                        setTimeout(callback, callbackDelay)
+                    } catch (e) {
 
+                    }
                 }
-            }
-            el.innerText += text.charAt(i++).replace(' ', '\xa0')
-        }, delay)
+                el.innerText += text.charAt(i++).replace(' ', '\xa0')
+            }, delay)
+        }, startDelay)
     }
 
     function startForm() {
@@ -80,7 +82,9 @@
         emailContainer.appendChild(inputsContainer)
 
         form.appendChild(emailContainer)
-        input.focus()
+        setTimeout(() => {
+            input.focus()
+        })
     }
 
     function createPassword(form) {
