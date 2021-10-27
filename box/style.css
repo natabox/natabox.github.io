@@ -29,7 +29,37 @@ body {
     display: none;
 }
 
-.files {
+.path {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    font-size: var(--main-font-size);
+    gap: 20px;
+    min-height: 40px;
+    border-bottom: 1px solid var(--border-main);
+}
+
+.path ion-icon {
+    font-size: var(--bigger-font-size);
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.path ion-icon:hover {
+    background-color: hsl(215, 21%, 20%);
+}
+
+.path ion-icon:active {
+    background-color: hsl(215, 21%, 25%);
+    outline: 1px solid hsl(215, 21%, 40%);
+}
+
+.folders {
+    border-top: 1px solid var(--border-main);
+}
+
+.files,
+.folders {
     /* width: 100%; */
     display: flex;
     padding: 15px;
@@ -39,7 +69,8 @@ body {
     align-items: top;
 }
 
-.file {
+.file,
+.folder {
     overflow: hidden;
     background-color: var(--file-bg);
     display: flex;
@@ -55,9 +86,33 @@ body {
     transition: all 0.2s ease !important;
 }
 
+.folder {
+    height: unset;
+    font-size: 1.2rem;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-direction: row;
+}
 
 
-.file:hover {
+.folder::before {
+    content: '';
+    background-image: url(assets/img/icons/folder.svg);
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.folder:hover {
+    background-color: var(--file-bg-blue);
+}
+
+.folder .file:hover,
+.folder:hover {
     border: 1px solid hsl(var(--file-selected-border));
     box-shadow: var(--blue-shadow);
     transform: scale(1.06) !important;
@@ -210,6 +265,10 @@ body {
     animation-delay: 200ms;
 }
 
+.context-menu>div:nth-child(7) {
+    animation-delay: 230ms;
+}
+
 @keyframes op {
     0% {
         opacity: 0;
@@ -323,7 +382,8 @@ body {
 .generate-link,
 .categories,
 .create-category,
-.rename {
+.rename,
+.newfolder {
     width: 100vw;
     max-width: 500px;
     max-height: 90vh;
@@ -611,14 +671,16 @@ body {
     align-items: center;
 }
 
-.rename form {
+.rename form,
+.newfolder form {
     display: flex;
     flex-direction: column;
     gap: 20px;
     width: 100%;
 }
 
-.rename form input {
+.rename form input,
+.newfolder form input {
     width: 100%;
     border-radius: var(--main-roundness);
     border: 1px solid var(--file-border);
@@ -631,11 +693,13 @@ body {
     border: 1px solid var(--border-main);
 }
 
-.rename form input:focus {
+.rename form input:focus,
+.newfolder form input:focus {
     box-shadow: var(--main-shadow);
 }
 
-.rename form button {
+.rename form button,
+.newfolder form button {
     background-color: hsl(var(--file-selected-border));
     color: white;
     padding: 10px 20px;
@@ -643,12 +707,14 @@ body {
     cursor: pointer;
 }
 
-.rename form button:hover {
+.rename form button:hover,
+.newfolder form button:hover {
     background-color: hsl(var(--file-bg-blue-alt));
 
 }
 
-.rename form button:active {
+.rename form button:active,
+.newfolder form button:active {
     background-color: hsl(var(--file-bg-blue-alt2));
 }
 

@@ -12,7 +12,8 @@ class File {
     element
     catid
     imgTypes
-    constructor(id, name, type, size, date, path, cat) {
+    folder
+    constructor(id, name, type, size, date, path, cat, folder) {
         this.id = id
         this.name = name
         this.type = type
@@ -20,6 +21,7 @@ class File {
         this.date = date
         this.path = path
         this.catid = cat
+        this.folder = folder
     }
     render(el, renderImgs, categories) {
         const div = document.createElement('div')

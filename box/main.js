@@ -3,6 +3,7 @@
     const url = urls[1]
 
     const filesContainer = document.querySelector('.files')
+    const foldersContainer = document.querySelector('.folders')
     const filesInput = document.querySelector('input#upload')
     const filesLabel = document.querySelector('label.upload__btn')
     const searchInput = document.querySelector('input#search')
@@ -14,7 +15,33 @@
     const sortSelect = document.querySelector('select[name="sort"]')
     const orderSelect = document.querySelector('select[name="order"]')
     const previewInput = document.querySelector('input[name="preview"]')
+    const pathEl = document.querySelector('.path')
+    const backBtn = document.querySelector('.path ion-icon')
     const maxFileSize = 2048
+
+    let path = "/"
+
+    backBtn.onclick = () => {
+        if (path == '/') return
+        let rem = 0
+        for (let i = path.length - 2; i >= 0; i--) {
+            if (path.charAt(i) == '/') {
+                rem = i
+                break
+            }
+        }
+        path = path.substring(0, rem + 1)
+        let pathTxt = pathEl.children[1].innerText
+        rem = 0
+        for (let i = pathTxt.length - 2; i >= 0; i--) {
+            if (pathTxt.charAt(i) == '/') {
+                rem = i
+                break
+            }
+        }
+        pathEl.children[1].innerText = pathTxt.substring(0, rem + 1)
+        getAllFiles()
+    }
 
     try {
         previewInput.checked = JSON.parse(localStorage.getItem('settings')).preview
@@ -43,6 +70,7 @@
     }
 
     let fileContainers = document.querySelectorAll('.file')
+    let folderContainers = document.querySelectorAll('.folder')
 
     logoutBtn.onclick = () => {
         localStorage.removeItem('account')
@@ -86,6 +114,7 @@
                 Preview: 'Images preview',
             },
             Week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            Newfolder: 'New folder',
         },
         brazil: {
             Download: 'Download',
@@ -123,6 +152,7 @@
                 Preview: 'Visualização das imagens',
             },
             Week: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            Newfolder: 'Nova pasta',
         },
         japan: {
             Download: 'ダウンロード',
@@ -160,6 +190,7 @@
                 Preview: '画像プレビュー',
             },
             Week: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+            Newfolder: '新しいフォルダー',
         },
         russia: {
             Download: 'скачать',
@@ -197,6 +228,7 @@
                 Preview: 'предварительный просмотр изображений',
             },
             Week: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+            Newfolder: 'новая папка',
         }
     }
 
@@ -248,6 +280,9 @@
     let selectedElement
     let selectedIndex
 
+    let selectedFolderElement
+    let selectedFolderIndex
+
     const key = 'supersecretkey17845'
 
     function decrypt(msg) {
@@ -257,6 +292,7 @@
 
     const files = []
     const filesCategories = []
+    const folders = []
 
     function getCatNameById(id) {
         for (let i = 0; i < filesCategories.length; i++) {
@@ -335,8 +371,12 @@
         searchInput.value = ''
         sortBy(sortMethod)
         filesContainer.innerHTML = ''
+        foldersContainer.innerHTML = ''
         files.forEach(e => {
             e.render(filesContainer, previewInput.checked, filesCategories)
+        })
+        folders.forEach(e => {
+            e.render(foldersContainer)
         })
         updateToolTips()
     }
@@ -351,8 +391,10 @@
 
     function getAllFiles() {
         const acc = JSON.parse(decrypt(localStorage.getItem('account')))
+        let loaded = false
         files.length = 0
-        fetch(url + '/files', {
+        folders.length = 0
+        fetch(`${url}/files/folder/${path == "/" ? '-1' : path.split('/')[path.split('/').length - 2]}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -382,11 +424,33 @@
                         new File(x.id, x.name, x.type, (parseFloat(x.size) / 1024).toFixed(2) + ' KB', jsDate, x.path, x.categoryId)
                     )
                 }
-                renderAll()
+                if (loaded) renderAll()
+                loaded = true
             })
             .catch(err => {
                 console.error('Oops, something went wrog: ', err)
             })
+
+        fetch(`${url}/folder/${path == "/" ? '-1' : path.split('/')[path.split('/').length - 2]}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'User': acc.email,
+                    'Password': acc.password,
+                },
+            })
+            .then(res => res.json())
+            .then(result => {
+                for (let i = 0; i < result.length; i++) {
+                    folders.push(new Folder(result[i].id, result[i].name))
+                }
+                if (loaded) renderAll()
+                loaded = true
+            })
+            .catch(error => {
+                console.error('Oops, something went wrog: ', error)
+            })
+
     }
 
 
@@ -438,6 +502,7 @@
         })
 
         fileContainers = document.querySelectorAll('.file')
+        folderContainers = document.querySelectorAll('.folder')
         fileContainers.forEach(e => {
             const tooltip = document.createElement('div')
             tooltip.className = 'tooltip'
@@ -869,6 +934,32 @@
                 tooltip.remove()
             })
         })
+        folderContainers.forEach(e => {
+            e.ondblclick = () => {
+                selectedFolderElement = e
+                findFolder()
+                updatePath()
+                getAllFiles()
+            }
+            e.oncontextmenu = (ev) => {
+                ev.preventDefault()
+                selectedFolderElement = e
+                findFolder()
+            }
+        })
+    }
+
+    function updatePath() {
+        path += folders[selectedFolderIndex].id + "/"
+        let name
+        folders.every((e) => {
+            if (e.id == folders[selectedFolderIndex].id) {
+                name = e.name
+                return false
+            }
+            return true
+        })
+        pathEl.children[1].innerText += name + "/"
     }
 
     function findObject() {
@@ -881,16 +972,24 @@
         })
     }
 
+    function findFolder() {
+        folders.every((e, i) => {
+            if (e.element == selectedFolderElement) {
+                selectedFolderIndex = i
+                return false
+            }
+            return true
+        })
+    }
+
     function downloadFile() {
-        const url = files[selectedIndex].path
-        const fileName = files[selectedIndex].name
-        fetch(url)
+        fetch(files[selectedIndex].path)
             .then(response => response.blob())
             .then(blob => {
                 const link = document.createElement('a')
                 link.href = URL.createObjectURL(blob)
                 link.target = '_blank'
-                link.download = fileName
+                link.download = files[selectedIndex].name
                 link.click()
             })
     }
@@ -1042,6 +1141,7 @@
         for (let i = 0; i < recievedFiles.length; i++) {
             formData.append(`file[]`, recievedFiles[i], recievedFiles[i].name)
         }
+        formData.append('folder', path == "/" ? '-1' : path.split('/')[path.split('/').length - 2])
         fetch(url + '/files/upload', {
                 method: 'POST',
                 headers: {
@@ -1100,6 +1200,69 @@
         })
     }
 
+    document.addEventListener('keypress', e => {
+        const backdrop = document.querySelectorAll('.backdrop')
+        if (backdrop.length > 0) return
+        if ((e.key == 'n' || e.key == 'N') && e.shiftKey) {
+            e.preventDefault()
+            newFolder()
+        }
+    })
+
+    function newFolder() {
+        let creating = false
+        const backdrop = document.createElement('div')
+        backdrop.className = 'backdrop'
+        backdrop.onclick = e => {
+            if (e.target == backdrop) backdrop.remove()
+        }
+        const newfolder = document.createElement('div')
+        newfolder.className = 'newfolder'
+        const form = document.createElement('form')
+        const input = document.createElement('input')
+        input.type = 'text'
+        input.value = texts.Newfolder
+        const btn = document.createElement('button')
+        btn.innerText = texts.Newfolder
+
+        const spinner = document.createElement('div')
+        spinner.className = 'spinner'
+
+        form.onsubmit = (e) => {
+            e.preventDefault()
+            if (creating) return
+            creating = true
+            newfolder.innerHTML = ''
+            newfolder.appendChild(spinner)
+            fetch(url + '/folder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        User: JSON.parse(decrypt(localStorage.getItem('account'))).email,
+                        Password: JSON.parse(decrypt(localStorage.getItem('account'))).password
+                    },
+                    body: JSON.stringify({
+                        name: input.value,
+                        folderId: path == "/" ? null : path.split('/')[path.split('/').length - 2]
+                    })
+                })
+                .then(response => response.json())
+                .then(res => {
+                    getAllFiles()
+                    backdrop.remove()
+                })
+                .catch(err => {
+                    console.error(err)
+                    backdrop.remove()
+                })
+        }
+
+        form.appendChild(input)
+        form.appendChild(btn)
+        newfolder.appendChild(form)
+        backdrop.appendChild(newfolder)
+        document.body.appendChild(backdrop)
+    }
 
     getAllFiles()
 })()
