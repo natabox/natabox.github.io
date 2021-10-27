@@ -1059,6 +1059,8 @@ header .search input:focus {
 }
 
 iframe.visualize {
+    user-select: none;
+    /* pointer-events: none; */
     width: 80vw;
     height: 80vh;
     max-width: 1920px;
@@ -1067,8 +1069,11 @@ iframe.visualize {
 }
 
 video.visualize {
+    height: 80vmin;
     width: 80vmin;
-    max-width: 700px;
+    object-fit: contain;
+    max-width: 1000px;
+    max-height: 1000px;
 }
 
 .visualize {
@@ -1078,7 +1083,11 @@ video.visualize {
 img.visualize {
     user-select: none;
     pointer-events: none;
-
+    height: 80vmin;
+    width: 80vmin;
+    object-fit: contain;
+    max-width: 1000px;
+    max-height: 1000px;
 }
 
 .visualize.empty {

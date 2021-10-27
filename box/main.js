@@ -335,19 +335,25 @@
 
     function sortBy(key) {
         files.sort((a, b) => {
+            let aname = a[key]
+            let bname = b[key]
+            if (typeof a[key] == 'string') {
+                aname = a[key].toLowerCase()
+                bname = b[key].toLowerCase()
+            }
             if (direction == 1) {
-                if (a[key] > b[key]) {
+                if (aname > bname) {
                     return 1
                 }
-                if (a[key] < b[key]) {
+                if (aname < bname) {
                     return -1
                 }
                 return 0
             } else if (direction == -1) {
-                if (a[key] < b[key]) {
+                if (aname < bname) {
                     return 1
                 }
-                if (a[key] > b[key]) {
+                if (aname > bname) {
                     return -1
                 }
                 return 0
@@ -443,6 +449,31 @@
             .then(result => {
                 for (let i = 0; i < result.length; i++) {
                     folders.push(new Folder(result[i].id, result[i].name))
+                    console.log(folders[i].name)
+                }
+                folders.sort((a, b) => {
+                    const aname = a.name.toLowerCase()
+                    const bname = b.name.toLowerCase()
+                    if (direction == 1) {
+                        if (aname > bname) {
+                            return 1
+                        }
+                        if (aname < bname) {
+                            return -1
+                        }
+                        return 0
+                    } else if (direction == -1) {
+                        if (aname < bname) {
+                            return 1
+                        }
+                        if (aname > bname) {
+                            return -1
+                        }
+                        return 0
+                    }
+                })
+                for (let i = 0; i < folders.length; i++) {
+                    console.log(folders[i].name)
                 }
                 if (loaded) renderAll()
                 loaded = true
@@ -938,6 +969,11 @@
             e.ondblclick = () => {
                 selectedFolderElement = e
                 findFolder()
+                filesContainer.innerHTML = ''
+                foldersContainer.innerHTML = ''
+                const spinner = document.createElement('div')
+                spinner.className = 'spinner'
+                filesContainer.appendChild(spinner)
                 updatePath()
                 getAllFiles()
             }
