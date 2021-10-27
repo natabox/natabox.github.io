@@ -449,7 +449,6 @@
             .then(result => {
                 for (let i = 0; i < result.length; i++) {
                     folders.push(new Folder(result[i].id, result[i].name))
-                    console.log(folders[i].name)
                 }
                 folders.sort((a, b) => {
                     const aname = a.name.toLowerCase()
@@ -472,9 +471,6 @@
                         return 0
                     }
                 })
-                for (let i = 0; i < folders.length; i++) {
-                    console.log(folders[i].name)
-                }
                 if (loaded) renderAll()
                 loaded = true
             })
@@ -1247,6 +1243,7 @@
             return
         }
         if ((e.key == 'n' || e.key == 'N') && e.shiftKey) {
+            if (document.activeElement == searchInput) return
             e.preventDefault()
             newFolder()
         }
