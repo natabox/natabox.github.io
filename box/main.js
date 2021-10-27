@@ -1236,9 +1236,16 @@
         })
     }
 
-    document.addEventListener('keypress', e => {
+    document.addEventListener('keyup', e => {
         const backdrop = document.querySelectorAll('.backdrop')
-        if (backdrop.length > 0) return
+        if (backdrop.length > 0) {
+            if (e.key == 'Escape') {
+                backdrop.forEach(e => {
+                    e.remove()
+                })
+            }
+            return
+        }
         if ((e.key == 'n' || e.key == 'N') && e.shiftKey) {
             e.preventDefault()
             newFolder()

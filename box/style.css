@@ -111,7 +111,7 @@ body {
     background-color: var(--file-bg-blue);
 }
 
-.folder .file:hover,
+.file:hover,
 .folder:hover {
     border: 1px solid hsl(var(--file-selected-border));
     box-shadow: var(--blue-shadow);
@@ -668,6 +668,10 @@ body {
 .rename {
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.newfolder {
     align-items: center;
 }
 
