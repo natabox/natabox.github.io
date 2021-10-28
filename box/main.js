@@ -18,11 +18,17 @@
     const pathEl = document.querySelector('.path')
     const backBtn = document.querySelector('.path ion-icon')
     const maxFileSize = 2048
+    const newFolderBtn = document.querySelector('.createfolder')
 
     let path = "/"
 
     backBtn.onclick = () => {
         if (path == '/') return
+        filesContainer.innerHTML = ''
+        foldersContainer.innerHTML = ''
+        const spinner = document.createElement('div')
+        spinner.className = 'loading'
+        filesContainer.appendChild(spinner)
         let rem = 0
         for (let i = path.length - 2; i >= 0; i--) {
             if (path.charAt(i) == '/') {
@@ -94,6 +100,7 @@
             Cat: 'Category',
             Color: 'Color',
             Confirmation: 'Are you sure you want to delete the file',
+            ConfirmationFolder: 'Are you sure you want to delete the folder',
             Yes: 'Yes',
             Cancel: 'Cancel',
             Search: 'Search files',
@@ -115,6 +122,7 @@
             },
             Week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             Newfolder: 'New folder',
+            FolderFiles: 'Delete all files from the folder to delete it',
         },
         brazil: {
             Download: 'Download',
@@ -132,6 +140,7 @@
             Cat: 'Categoria',
             Color: 'Cor',
             Confirmation: 'Tem certeza que gostaria de excluir o arquivo',
+            ConfirmationFolder: 'Tem certeza que gostaria de excluir a pasta',
             Yes: 'Sim',
             Cancel: 'Cancelar',
             Search: 'Pesquisar arquivos',
@@ -153,6 +162,7 @@
             },
             Week: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
             Newfolder: 'Nova pasta',
+            FolderFiles: 'Apague todos os arquivos da pasta para apagá-la',
         },
         japan: {
             Download: 'ダウンロード',
@@ -170,6 +180,7 @@
             Cat: 'カテゴリ',
             Color: '色',
             Confirmation: 'このファイルを削除してもよろしいですか',
+            ConfirmationFolder: 'フォルダを削除してもよ思いますか',
             Yes: 'はい',
             Cancel: 'キャンセル',
             Search: 'ファイル検索',
@@ -191,6 +202,7 @@
             },
             Week: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
             Newfolder: '新しいフォルダー',
+            FolderFiles: 'フォルダからすべてのファイルを削除して削除します',
         },
         russia: {
             Download: 'скачать',
@@ -208,6 +220,7 @@
             Cat: 'категория',
             Color: 'Цвет',
             Confirmation: 'Вы уверены, что хотите удалить файл',
+            ConfirmationFolder: 'Вы уверены, что хотите удалить папку',
             Yes: 'да',
             Cancel: 'Отмена',
             Search: 'искать файлы',
@@ -229,6 +242,7 @@
             },
             Week: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
             Newfolder: 'новая папка',
+            FolderFiles: 'Удалите все файлы из папки, чтобы удалить ее',
         }
     }
 
@@ -253,6 +267,7 @@
     orderSelect.parentElement.children[0].innerText = texts.Options.Order
     previewInput.parentElement.children[0].innerText = texts.Options.Preview
     searchInput.placeholder = texts.Search
+    newFolderBtn.children[1].innerText = texts.Newfolder
     langsBtns.forEach(e => {
         e.onclick = () => {
             localStorage.setItem('lang', e.className)
@@ -273,6 +288,8 @@
             orderSelect.children[1].innerText = texts.Options.Descending
 
             previewInput.parentElement.children[0].innerText = texts.Options.Preview
+
+            newFolderBtn.children[1].innerText = texts.Newfolder
         }
     })
 
@@ -327,9 +344,14 @@
         })
 
 
-    searchInput.oninput = () => render(files.filter(e => {
-        return e.name.toLowerCase().includes(searchInput.value.toLowerCase()) || getCatIdsByName(searchInput.value).includes(e.catid)
-    }))
+    searchInput.oninput = () => {
+        render(files.filter(e => {
+            return e.name.toLowerCase().includes(searchInput.value.toLowerCase()) || getCatIdsByName(searchInput.value).includes(e.catid)
+        }))
+        renderFolders(folders.filter(e => {
+            return e.name.toLowerCase().includes(searchInput.value.toLowerCase())
+        }))
+    }
 
 
 
@@ -391,6 +413,14 @@
         filesContainer.innerHTML = ''
         arr.forEach(e => {
             e.render(filesContainer, previewInput.checked, filesCategories)
+        })
+        updateToolTips()
+    }
+
+    function renderFolders(arr) {
+        foldersContainer.innerHTML = ''
+        arr.forEach(e => {
+            e.render(foldersContainer)
         })
         updateToolTips()
     }
@@ -482,6 +512,19 @@
 
 
     function updateToolTips() {
+        const contextMenu2 = document.createElement('div')
+        contextMenu2.className = 'context-menu'
+        contextMenu2.addEventListener('contextmenu', ev => {
+            ev.preventDefault()
+        })
+
+        const deleteBtn2 = document.createElement('div')
+        deleteBtn2.className = 'context-menu__delete'
+        deleteBtn2.innerText = texts.Delete
+
+        contextMenu2.appendChild(deleteBtn2)
+
+
         const contextMenu = document.createElement('div')
         contextMenu.className = 'context-menu'
         contextMenu.addEventListener('contextmenu', ev => {
@@ -526,11 +569,16 @@
 
         document.addEventListener('click', e => {
             contextMenu.remove()
+            contextMenu2.remove()
         })
 
         fileContainers = document.querySelectorAll('.file')
         folderContainers = document.querySelectorAll('.folder')
         fileContainers.forEach(e => {
+            e.addEventListener('dragstart', e => {
+                selectedElement = e.target
+                findObject()
+            })
             const tooltip = document.createElement('div')
             tooltip.className = 'tooltip'
 
@@ -962,13 +1010,44 @@
             })
         })
         folderContainers.forEach(e => {
+            e.addEventListener('dragover', e => {
+                if (e.dataTransfer.items[0] != undefined) return
+                if (!e.target.classList.contains('folder')) {
+                    e.target.parentElement.classList.add('drag')
+                    selectedFolderElement = e.target.parentElement
+                    findFolder()
+                } else {
+                    e.target.classList.add('drag')
+                    selectedFolderElement = e.target
+                    findFolder()
+                }
+            })
+            e.addEventListener('dragleave', e => {
+                if (e.dataTransfer.items[0] != undefined) return
+                if (!e.target.classList.contains('folder')) {
+                    e.target.parentElement.classList.remove('drag')
+                    selectedFolderElement = null
+                    selectedFolderIndex = null
+                } else {
+                    e.target.classList.remove('drag')
+                    selectedFolderElement = null
+                    selectedFolderIndex = null
+                }
+            })
+            e.addEventListener('drop', e => {
+                if (!e.target.classList.contains('folder')) {
+                    e.target.parentElement.classList.remove('drag')
+                } else {
+                    e.target.classList.remove('drag')
+                }
+            })
             e.ondblclick = () => {
                 selectedFolderElement = e
                 findFolder()
                 filesContainer.innerHTML = ''
                 foldersContainer.innerHTML = ''
                 const spinner = document.createElement('div')
-                spinner.className = 'spinner'
+                spinner.className = 'loading'
                 filesContainer.appendChild(spinner)
                 updatePath()
                 getAllFiles()
@@ -977,6 +1056,25 @@
                 ev.preventDefault()
                 selectedFolderElement = e
                 findFolder()
+                createContextMenu(ev)
+            }
+
+            function createContextMenu(event) {
+                event.preventDefault()
+                deleteBtn2.innerText = texts.Delete
+
+                selectedFolderElement = e
+                findFolder()
+                deleteBtn2.onclick = () => {
+                    deleteFolder()
+                }
+
+                document.body.appendChild(contextMenu2)
+                if (event.changedTouches == undefined)
+                    contextMenu2.style = `${window.innerHeight - event.clientY > contextMenu2.offsetHeight ? 'top: ' + event.clientY : 'bottom: 0'}px; ${window.innerWidth - (event.clientX + 10) > contextMenu2.offsetWidth ? 'left: ' + (event.clientX + 10) : 'right: 0'}px;`
+                else
+                    contextMenu2.style = `${window.innerHeight - event.changedTouches[0].clientY > contextMenu2.offsetHeight ? 'top: ' + event.changedTouches[0].clientY : 'bottom: 0'}px; ${window.innerWidth - (event.changedTouches[0].clientX + 10) > contextMenu2.offsetWidth ? 'left: ' + (event.changedTouches[0].clientX + 10) : 'right: 0'}px;`
+
             }
         })
     }
@@ -1024,6 +1122,53 @@
                 link.download = files[selectedIndex].name
                 link.click()
             })
+    }
+
+    function deleteFolder() {
+        const backdrop = document.createElement('div')
+        const confirmation = document.createElement('div')
+        const paragraph = document.createElement('p')
+        const buttons = document.createElement('div')
+        const cancelBtn = document.createElement('button')
+        const yesBtn = document.createElement('button')
+        backdrop.className = 'backdrop'
+        confirmation.className = 'confirm'
+        buttons.className = 'btns'
+        paragraph.innerText = `${texts.ConfirmationFolder} "${folders[selectedFolderIndex].name}"?`
+        cancelBtn.innerText = texts.Cancel
+        yesBtn.innerText = texts.Yes
+        confirmation.appendChild(paragraph)
+        buttons.appendChild(cancelBtn)
+        buttons.appendChild(yesBtn)
+        confirmation.appendChild(buttons)
+        backdrop.appendChild(confirmation)
+        cancelBtn.onclick = () => {
+            backdrop.remove()
+        }
+        yesBtn.onclick = () => {
+            const spinner = document.createElement('div')
+            spinner.className = 'spinner'
+            buttons.remove()
+            paragraph.remove()
+            confirmation.appendChild(spinner)
+            const acc = JSON.parse(decrypt(localStorage.getItem('account')))
+            fetch(`${url}/folder/${folders[selectedFolderIndex].id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        User: acc.email,
+                        Password: acc.password
+                    }
+                })
+                .then((res) => {
+                    backdrop.remove()
+                    if (res.status == 409) throw new Error("409")
+                    getAllFiles()
+                })
+                .catch(err => {
+                    if (err.message.includes("409")) showError(texts.FolderFiles)
+                })
+        }
+        document.body.appendChild(backdrop)
     }
 
 
@@ -1144,6 +1289,7 @@
     function dragging(e) {
         e.preventDefault()
         e.stopPropagation()
+        if (e.dataTransfer.items[0] == undefined) return
         dropArea.children[0].innerText = texts.Drag
         dropArea.classList.add('show')
     }
@@ -1156,6 +1302,32 @@
     document.addEventListener('dragleave', notDragging, false)
     document.body.addEventListener('drop', (e) => {
         e.preventDefault()
+        if (e.dataTransfer.files.length == 0) {
+            if (e.target.classList.contains('folder') || e.target.parentElement.classList.contains('folder')) {
+                const spinner = document.createElement('div')
+                spinner.className = 'spinner'
+                files[selectedIndex].element.appendChild(spinner)
+                files[selectedIndex].element.classList.add("moving")
+                fetch(`${url}/files/${files[selectedIndex].id}/folder/${folders[selectedFolderIndex].id}`, {
+                        method: 'PUT',
+                        headers: {
+                            User: JSON.parse(decrypt(localStorage.getItem('account'))).email,
+                            Password: JSON.parse(decrypt(localStorage.getItem('account'))).password
+                        }
+                    })
+                    .then(e => {
+                        if (e.status == 403) throw new Error("Folder not found")
+                        return e.json()
+                    })
+                    .then(res => {
+                        getAllFiles()
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
+            }
+            return
+        }
         notDragging(e)
         uploadFiles(e.dataTransfer.files)
     }, false)
@@ -1232,6 +1404,7 @@
         })
     }
 
+
     document.addEventListener('keyup', e => {
         const backdrop = document.querySelectorAll('.backdrop')
         if (backdrop.length > 0) {
@@ -1303,6 +1476,8 @@
         backdrop.appendChild(newfolder)
         document.body.appendChild(backdrop)
     }
+
+    newFolderBtn.onclick = newFolder
 
     getAllFiles()
 })()
