@@ -1,6 +1,6 @@
 (() => {
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
-    const url = urls[0]
+    const url = urls[1]
 
     const filesContainer = document.querySelector('.files')
     const foldersContainer = document.querySelector('.folders')
