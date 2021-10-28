@@ -25,7 +25,7 @@ class File {
     }
     render(el, renderImgs, categories) {
         const div = document.createElement('div')
-        div.className = `file ${this.type}`
+        div.className = `file ${this.type.toLowerCase()}`
         div.setAttribute("draggable", "true")
         const img = document.createElement('div')
         img.className = 'file__img'

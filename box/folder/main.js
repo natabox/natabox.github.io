@@ -209,24 +209,24 @@
                     if (e.target == backdrop) backdrop.remove()
                 }
 
-                if (imgTypes.includes(files[selectedIndex].type)) {
+                if (imgTypes.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('img')
                     el.src = files[selectedIndex].path
-                } else if (videoTypes.includes(files[selectedIndex].type)) {
+                } else if (videoTypes.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('video')
                     el.src = files[selectedIndex].path
-                    el.setAttribute('type', 'video/' + files[selectedIndex].type)
+                    el.setAttribute('type', 'video/' + files[selectedIndex].type.toLowerCase())
                     el.setAttribute('controls', 'true')
-                } else if (files[selectedIndex].type == 'pdf' || files[selectedIndex].type == 'txt') {
+                } else if (files[selectedIndex].type.toLowerCase() == 'pdf' || files[selectedIndex].type.toLowerCase() == 'txt') {
                     el = document.createElement('iframe')
                     el.src = files[selectedIndex].path
-                } else if (audioTypes.includes(files[selectedIndex].type)) {
+                } else if (audioTypes.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('audio')
                     el.src = files[selectedIndex].path
                     el.setAttribute('controls', 'true')
                 } else {
                     el = document.createElement('div')
-                    el.innerText = texts.Visualize
+                    el.innerText = 'Nenhuma visualização disponível'
                     el.classList.add('empty')
                 }
                 el.oncontextmenu = e => {
