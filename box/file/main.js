@@ -1,6 +1,6 @@
 (() => {
-    const url = 'https://natabox.herokuapp.com'
-    // const url = 'http://localhost:3000'
+    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
+    const url = urls[1]
     if (window.location.href.includes('?=')) {
         const param = window.location.href.split('?=')[1].replaceAll('/', '')
         fetch(`${url}/link/${param}`, {

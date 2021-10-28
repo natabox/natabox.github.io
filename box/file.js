@@ -40,10 +40,12 @@ class File {
         spanName.innerText = this.name
         name.appendChild(spanName)
         div.appendChild(name)
-        for (let i = 0; i < categories.length; i++) {
-            if (categories[i].id == this.catid) {
-                div.style.borderColor = categories[i].color
-                break
+        if (categories != null) {
+            for (let i = 0; i < categories.length; i++) {
+                if (categories[i].id == this.catid) {
+                    div.style.borderColor = categories[i].color
+                    break
+                }
             }
         }
 
