@@ -29,7 +29,7 @@ class File {
         div.setAttribute("draggable", "true")
         const img = document.createElement('div')
         img.className = 'file__img'
-        if (imgTypes.includes(this.type) && renderImgs) {
+        if (imgTypes.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
             img.style = `background-image: url(${this.path})`
         }
