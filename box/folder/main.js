@@ -165,7 +165,8 @@
 
         fileContainers.forEach(e => {
             e.removeAttribute('draggable')
-            e.oncontextmenu = event => {
+
+            function createContextMenu(event) {
                 event.preventDefault()
                 contextMenu.remove()
                 selectedElement = e
@@ -177,7 +178,10 @@
                     contextMenu.style = `${window.innerHeight - event.clientY > contextMenu.offsetHeight ? 'top: ' + event.clientY : 'bottom: 0'}px; ${window.innerWidth - (event.clientX + 10) > contextMenu.offsetWidth ? 'left: ' + (event.clientX + 10) : 'right: 0'}px;`
                 else
                     contextMenu.style = `${window.innerHeight - event.changedTouches[0].clientY > contextMenu.offsetHeight ? 'top: ' + event.changedTouches[0].clientY : 'bottom: 0'}px; ${window.innerWidth - (event.changedTouches[0].clientX + 10) > contextMenu.offsetWidth ? 'left: ' + (event.changedTouches[0].clientX + 10) : 'right: 0'}px;`
+
             }
+            e.oncontextmenu = createContextMenu
+            e.addEventListener('touchend', createContextMenu)
 
             e.ondblclick = () => {
                 selectedElement = e
