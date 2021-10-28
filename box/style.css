@@ -1173,3 +1173,11 @@ img.visualize {
     padding: 50px;
     font-size: 1.5rem;
 }
+
+footer {
+    text-align: justify;
+    margin-top: auto;
+    padding: 20px;
+    font-size: var(--s-font-size);
+    border-top: 1px solid var(--border-main);
+}
