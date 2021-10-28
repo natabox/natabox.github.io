@@ -1,6 +1,6 @@
 (() => {
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
-    const url = urls[1]
+    const url = urls[0]
 
     const filesContainer = document.querySelector('.files')
     const foldersContainer = document.querySelector('.folders')
@@ -522,6 +522,11 @@
         deleteBtn2.className = 'context-menu__delete'
         deleteBtn2.innerText = texts.Delete
 
+        const linkBtn2 = document.createElement('div')
+        linkBtn2.className = 'context-menu__link'
+        linkBtn2.innerText = texts.Link
+
+        contextMenu2.appendChild(linkBtn2)
         contextMenu2.appendChild(deleteBtn2)
 
 
@@ -1060,14 +1065,13 @@
             }
 
             function createContextMenu(event) {
-                event.preventDefault()
                 deleteBtn2.innerText = texts.Delete
+                linkBtn2.innerText = texts.Link
 
                 selectedFolderElement = e
                 findFolder()
-                deleteBtn2.onclick = () => {
-                    deleteFolder()
-                }
+                deleteBtn2.onclick = deleteFolder
+                linkBtn2.onclick = linkFolder
 
                 document.body.appendChild(contextMenu2)
                 if (event.changedTouches == undefined)
@@ -1075,6 +1079,73 @@
                 else
                     contextMenu2.style = `${window.innerHeight - event.changedTouches[0].clientY > contextMenu2.offsetHeight ? 'top: ' + event.changedTouches[0].clientY : 'bottom: 0'}px; ${window.innerWidth - (event.changedTouches[0].clientX + 10) > contextMenu2.offsetWidth ? 'left: ' + (event.changedTouches[0].clientX + 10) : 'right: 0'}px;`
 
+            }
+
+            function linkFolder() {
+                const backdrop = document.createElement('div')
+                const linkEl = document.createElement('div')
+                const span = document.createElement('span')
+                const innerDiv = document.createElement('div')
+                const spinner = document.createElement('div')
+                const input = document.createElement('input')
+                const button = document.createElement('button')
+                const copyBtn = document.createElement('button')
+                backdrop.className = 'backdrop'
+                linkEl.className = 'generate-link'
+                span.innerText = texts.Publiclink
+                spinner.className = 'spinner'
+                input.type = 'text'
+                input.readOnly = 'true'
+                button.innerText = texts.Generate
+                copyBtn.innerText = texts.Copy
+
+                backdrop.onclick = (e) => {
+                    if (e.target == backdrop) backdrop.remove()
+                }
+
+                copyBtn.onclick = () => {
+                    input.focus()
+                    input.select()
+                    document.execCommand('copy')
+                }
+
+                button.onclick = () => {
+                    button.remove()
+                    innerDiv.appendChild(spinner)
+                    const acc = JSON.parse(decrypt(localStorage.getItem('account')))
+                    fetch(`${url}/folder/public/${folders[selectedFolderIndex].id}`, {
+                            method: 'PUT',
+                            headers: {
+                                User: acc.email,
+                                Password: acc.password,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(res => {
+                            const href = window.location.href
+                            spinner.remove()
+                            span.innerText = texts.Succeslink
+                            input.value = `${href.split('/box')[0]}/box/folder/?=${res.param}`
+                            innerDiv.appendChild(input)
+                            innerDiv.appendChild(copyBtn)
+                        }).catch(err => {
+                            console.error('Error: ' + err)
+                        })
+                }
+
+                const closeBtn = document.createElement('button')
+                closeBtn.className = 'closebtn'
+                closeBtn.appendChild(createIcon('close'))
+                closeBtn.onclick = () => {
+                    backdrop.remove()
+                }
+
+                innerDiv.appendChild(button)
+                linkEl.appendChild(span)
+                linkEl.appendChild(innerDiv)
+                linkEl.appendChild(closeBtn)
+                backdrop.appendChild(linkEl)
+                document.body.appendChild(backdrop)
             }
         })
     }

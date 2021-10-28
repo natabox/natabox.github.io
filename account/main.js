@@ -37,7 +37,6 @@
             if (res.status == '404') throw new Error("Usuário ou senha incorretos")
             return res.json()
         }).then(result => {
-            console.log(result)
             localStorage.setItem('account', encrypt(JSON.stringify({
                 email: u,
                 password: p
