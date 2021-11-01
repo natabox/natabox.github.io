@@ -334,13 +334,23 @@
                 Password: JSON.parse(decrypt(localStorage.getItem('account'))).password,
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status == 500) throw new Error("password")
+            if (response.status != 200) throw new Error("error")
+            return response.json()
+        })
         .then(res => {
             filesCategories.length = 0
             res.forEach(e => {
                 filesCategories.push(e)
             })
             renderAll()
+        })
+        .catch(e => {
+            if (error.message == 'password') {
+                window.location.href = window.location.href.replace('/box', '/account')
+                return
+            }
         })
 
 
@@ -438,7 +448,11 @@
                     'Password': acc.password,
                 },
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status == 500) throw new Error("password")
+                if (res.status != 200) throw new Error("error")
+                return res.json()
+            })
             .then(result => {
                 for (let i = 0; i < result.length; i++) {
                     const x = result[i]
@@ -464,7 +478,10 @@
                 loaded = true
             })
             .catch(err => {
-                console.error('Oops, something went wrog: ', err)
+                if (err.message == 'password') {
+                    window.location.href = window.location.href.replace('/box', '/account')
+                    return
+                }
             })
 
         fetch(`${url}/folder/${path == "/" ? '-1' : path.split('/')[path.split('/').length - 2]}`, {
@@ -475,7 +492,11 @@
                     'Password': acc.password,
                 },
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status == 500) throw new Error("password")
+                if (res.status != 200) throw new Error("error")
+                return res.json()
+            })
             .then(result => {
                 for (let i = 0; i < result.length; i++) {
                     folders.push(new Folder(result[i].id, result[i].name))
@@ -505,7 +526,10 @@
                 loaded = true
             })
             .catch(error => {
-                console.error('Oops, something went wrog: ', error)
+                if (error.message == 'password') {
+                    window.location.href = window.location.href.replace('/box', '/account')
+                    return
+                }
             })
 
     }
