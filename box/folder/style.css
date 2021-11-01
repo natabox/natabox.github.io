@@ -458,3 +458,7 @@ footer {
     font-size: var(--s-font-size);
     border-top: 1px solid var(--border-main);
 }
+
+footer a {
+    color: hsl(var(--file-selected-border));
+}
