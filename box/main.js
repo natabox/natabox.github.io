@@ -1,6 +1,6 @@
 (() => {
-    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
-    const url = urls[1]
+    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com', 'https://ec2-18-230-154-13.sa-east-1.compute.amazonaws.com:8080']
+    const url = urls[2]
 
     const filesContainer = document.querySelector('.files')
     const foldersContainer = document.querySelector('.folders')
@@ -9,7 +9,6 @@
     const searchInput = document.querySelector('input#search')
     const langsBtns = document.querySelectorAll('.lang img')
     const dropArea = document.querySelector('.drop')
-    const dropAreaEl = document.querySelector('.drop-area')
     const logoutBtn = document.querySelector('.logout')
     const uploading = document.querySelector('.uploading')
     const sortSelect = document.querySelector('select[name="sort"]')
@@ -1544,7 +1543,6 @@
     }, false)
 
     function uploadFiles(recievedFiles) {
-        console.log(recievedFiles)
         for (let i = 0; i < recievedFiles.length; i++) {
             if (recievedFiles[i].type == '' && recievedFiles[i].size == 0) {
                 showError('Tipo de arquivo não suportado')
@@ -1567,11 +1565,9 @@
                 body: formData,
             })
             .then(res => {
-                console.log(res)
                 return res.json()
             })
             .then(result => {
-                console.log(result)
                 result.forEach(e => {
                     const time = e.date.split(" ")[1]
                     const date = e.date.split(" ")[0]

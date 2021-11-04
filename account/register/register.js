@@ -2,8 +2,8 @@
     const welcomeSpan = document.querySelector('span.welcome')
     typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200, 2000)
 
-    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
-    const url = urls[1]
+    const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com', 'https://ec2-18-230-154-13.sa-east-1.compute.amazonaws.com:8080']
+    const url = urls[2]
 
     let registering = false
 
@@ -268,7 +268,6 @@
                 },
                 body: JSON.stringify(user)
             }).then((res) => {
-                console.log(res)
                 if (res.status == 404) throw new Error("Usuario ja cadastrado")
                 return res.json()
             })
@@ -276,11 +275,9 @@
                 if (result == undefined) {
                     throw new Error("Usuario ja cadastrado")
                 }
-                console.log(result)
                 success()
                 registering = false
             }).catch((err) => {
-                console.log(err)
                 if (String(err).includes("Usuario ja cadastrado")) {
                     error.innerText = 'Email ja cadastrado'
                     document.body.appendChild(error)
