@@ -189,6 +189,7 @@ body {
     pointer-events: none;
 }
 
+/*
 .file.pdf .file__img {
     background-image: url(assets/img/types/pdf.png);
 }
@@ -231,7 +232,7 @@ body {
 .file.ogg .file__img {
     background-image: url(assets/img/types/audio.png);
 }
-
+*/
 .file .file__img.rendered {
     background-size: cover;
     /* filter: grayscale(0); */
@@ -429,6 +430,28 @@ body {
     }
 }
 
+.textEditor {
+    width: 90% !important;
+    min-width: 100px;
+    align-items: center;
+    max-width: unset !important;
+}
+
+.textEditor form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.textEditor form>* {
+    font-size: var(--main-font-size);
+}
+
+.textEditor textarea {
+    resize: vertical;
+    min-height: 30px !important;
+}
 
 
 .confirm,
@@ -437,7 +460,8 @@ body {
 .categories,
 .create-category,
 .rename,
-.newfolder {
+.newfolder,
+.textEditor {
     width: 100vw;
     max-width: 500px;
     max-height: 90vh;
@@ -738,7 +762,9 @@ body {
 }
 
 .rename form input,
-.newfolder form input {
+.newfolder form input,
+.textEditor form input,
+.textEditor form textarea {
     width: 100%;
     border-radius: var(--main-roundness);
     border: 1px solid var(--file-border);
@@ -752,12 +778,15 @@ body {
 }
 
 .rename form input:focus,
-.newfolder form input:focus {
+.newfolder form input:focus,
+.textEditor form input,
+.textEditor form textarea {
     box-shadow: var(--main-shadow);
 }
 
 .rename form button,
-.newfolder form button {
+.newfolder form button,
+.textEditor form button {
     background-color: hsl(var(--file-selected-border));
     color: white;
     padding: 10px 20px;
@@ -766,13 +795,15 @@ body {
 }
 
 .rename form button:hover,
-.newfolder form button:hover {
+.newfolder form button:hover,
+.textEditor form button:hover {
     background-color: hsl(var(--file-bg-blue-alt));
 
 }
 
 .rename form button:active,
-.newfolder form button:active {
+.newfolder form button:active,
+.textEditor form button:hover {
     background-color: hsl(var(--file-bg-blue-alt2));
 }
 
@@ -782,20 +813,6 @@ input[name="upload"] {
 
 .path {
     flex-wrap: wrap;
-}
-
-.createfolder {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px 15px;
-    background-color: hsl(var(--upload-bg));
-    border-radius: var(--main-roundness);
-    box-shadow: var(--blue-shadow);
-    transition: all 0.2s ease;
-    gap: 10px;
-    margin: 5px 0 5px auto;
 }
 
 .upload__btn {
@@ -810,10 +827,14 @@ input[name="upload"] {
     border-radius: var(--main-roundness);
     box-shadow: var(--blue-shadow);
     transition: all 0.2s ease;
+    gap: 10px;
 }
 
-.upload__btn:hover,
-.createfolder:hover {
+.upload__btn ion-icon {
+    font-size: 1.5rem;
+}
+
+.upload__btn:hover {
     transform: scale(1.05) !important;
     background-color: hsl(var(--upload-bg-alt));
 }
@@ -833,7 +854,7 @@ input[name="upload"] {
 }
 
 .upload__btn::before {
-    content: '';
+    /* content: ''; */
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -1101,6 +1122,7 @@ header .search input:focus {
     gap: 20px;
     transition: top 0.1s ease;
     border: 1px solid hsl(var(--file-selected-border));
+    z-index: 2;
 }
 
 .error {
@@ -1184,4 +1206,67 @@ footer {
 
 footer a {
     color: hsl(var(--file-selected-border));
+}
+
+.upload__btn {
+    position: relative;
+    z-index: 3 !important;
+}
+
+.dropdown {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid hsl(var(--file-selected-border));
+    background-color: var(--file-bg);
+    border-radius: var(--main-roundness);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* animation: dropdown 0.2s ease-out forwards; */
+    transform-origin: top center;
+    transform: scaleY(0);
+    transition: transform 0.05s ease-out;
+    box-shadow: var(--blue-shadow);
+    max-width: unset;
+    /* width: 200%; */
+    right: unset;
+    min-width: 200%;
+}
+
+.dropdown.show {
+    transform: scaleY(1);
+}
+
+@keyframes dropdown {
+    0% {
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+.dropdown>* {
+    display: flex;
+    gap: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    max-width: unset;
+    width: auto;
+    align-items: center;
+}
+
+.dropdown span {
+    word-break: keep-all !important;
+}
+
+.dropdown>*:hover {
+    background-color: var(--file-bg-blue);
+}
+
+.dropdown ion-icon {
+    font-size: 1.7rem;
 }

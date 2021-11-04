@@ -5,7 +5,7 @@
     const filesContainer = document.querySelector('.files')
     const foldersContainer = document.querySelector('.folders')
     const filesInput = document.querySelector('input#upload')
-    const filesLabel = document.querySelector('label.upload__btn')
+    const filesLabel = document.querySelector('.upload__btn')
     const searchInput = document.querySelector('input#search')
     const langsBtns = document.querySelectorAll('.lang img')
     const dropArea = document.querySelector('.drop')
@@ -19,6 +19,30 @@
     const backBtn = document.querySelector('.path ion-icon')
     const maxFileSize = 2048
     const newFolderBtn = document.querySelector('.createfolder')
+    const dropdown = document.querySelector('.dropdown')
+    const textFile = document.querySelector('.newtext')
+
+    filesLabel.onclick = () => {
+        dropdown.classList.toggle('show')
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target != filesLabel) {
+            try {
+                if (e.target.parentElement != filesLabel) {
+                    try {
+                        if (e.target.parentElement.parentElement != filesLabel) {
+                            dropdown.classList.remove('show')
+                        }
+                    } catch (e) {
+                        dropdown.classList.remove('show')
+                    }
+                }
+            } catch (e) {
+
+            }
+        }
+    })
 
     let path = "/"
 
@@ -122,6 +146,9 @@
             },
             Week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             Newfolder: 'New folder',
+            New: 'New',
+            Folder: 'Folder',
+            TextFile: 'Text file',
             FolderFiles: 'Delete all files from the folder to delete it',
         },
         brazil: {
@@ -162,6 +189,9 @@
             },
             Week: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
             Newfolder: 'Nova pasta',
+            New: 'Novo',
+            Folder: 'Pasta',
+            TextFile: 'Arquivo de texto',
             FolderFiles: 'Apague todos os arquivos da pasta para apagá-la',
         },
         japan: {
@@ -202,6 +232,9 @@
             },
             Week: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
             Newfolder: '新しいフォルダー',
+            New: '新機能',
+            Folder: 'フォルダ',
+            TextFile: 'テキストファイル',
             FolderFiles: 'フォルダからすべてのファイルを削除して削除します',
         },
         russia: {
@@ -242,6 +275,9 @@
             },
             Week: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
             Newfolder: 'новая папка',
+            New: 'Новые функции',
+            Folder: 'папка',
+            TextFile: 'текстовый файл',
             FolderFiles: 'Удалите все файлы из папки, чтобы удалить ее',
         }
     }
@@ -252,11 +288,10 @@
         const currentLang = localStorage.getItem('lang')
         texts = langs[currentLang]
         langsBtns[0].parentElement.className = `lang ${currentLang}`
-        filesLabel.children[0].innerText = texts.Upload
     } else {
         texts = langs.brazil
-        filesLabel.children[0].innerText = texts.Upload
     }
+    filesLabel.children[1].innerText = texts.New
     sortSelect.children[0].innerText = texts.Name
     sortSelect.children[1].innerText = texts.Size
     sortSelect.children[2].innerText = texts.Type
@@ -267,14 +302,15 @@
     orderSelect.parentElement.children[0].innerText = texts.Options.Order
     previewInput.parentElement.children[0].innerText = texts.Options.Preview
     searchInput.placeholder = texts.Search
-    newFolderBtn.children[1].innerText = texts.Newfolder
+    newFolderBtn.children[1].innerText = texts.Folder
+    textFile.children[1].innerText = texts.TextFile
     langsBtns.forEach(e => {
         e.onclick = () => {
             localStorage.setItem('lang', e.className)
             e.parentElement.className = `lang ${e.className}`
             texts = langs[e.className]
             searchInput.placeholder = texts.Search
-            filesLabel.children[0].innerText = texts.Upload
+            filesLabel.children[1].innerText = texts.New
 
             sortSelect.parentElement.children[0].innerText = texts.Options.Sort
             orderSelect.parentElement.children[0].innerText = texts.Options.Order
@@ -289,7 +325,12 @@
 
             previewInput.parentElement.children[0].innerText = texts.Options.Preview
 
-            newFolderBtn.children[1].innerText = texts.Newfolder
+            newFolderBtn.children[1].innerText = texts.Folder
+
+            filesLabel.children[1].innerText = texts.New
+            filesInput.parentElement.children[1].innerText = texts.Upload
+
+            textFile.children[1].innerText = texts.TextFile
         }
     })
 
@@ -534,6 +575,74 @@
 
     }
 
+    textFile.onclick = () => {
+        const spinner = document.createElement('div')
+        spinner.className = 'spinner'
+
+        const backdrop = document.createElement('div')
+        backdrop.className = 'backdrop'
+        backdrop.onclick = (e) => {
+            if (e.target == backdrop) backdrop.remove()
+        }
+
+        const textEditor = document.createElement('div')
+        textEditor.className = 'textEditor'
+
+        const form = document.createElement('form')
+        const nameInput = document.createElement('input')
+        nameInput.type = 'text'
+        nameInput.placeholder = texts.Name
+        nameInput.required = true
+
+        const textArea = document.createElement('textarea')
+
+        const btn = document.createElement('button')
+        btn.innerText = texts.Upload
+
+        form.onsubmit = (e) => {
+            e.preventDefault()
+            if (nameInput.value == '' || nameInput.value == ' ') nameInput.value = 'Text'
+            form.remove()
+            textEditor.appendChild(spinner)
+            fetch(url + '/files/text/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        User: JSON.parse(decrypt(localStorage.getItem('account'))).email,
+                        Password: JSON.parse(decrypt(localStorage.getItem('account'))).password
+                    },
+                    body: JSON.stringify({
+                        name: nameInput.value,
+                        text: textArea.value == '' ? ' ' : textArea.value,
+                        folderid: path == "/" ? null : path.split('/')[path.split('/').length - 2]
+                    })
+                })
+                .then(res => res.json())
+                .then((r) => {
+                    if (r == undefined) throw new Error("err")
+                    getAllFiles()
+                    backdrop.remove()
+                })
+                .catch(e => {
+                    showError('Error')
+                    backdrop.remove()
+                })
+        }
+        form.appendChild(nameInput)
+        form.appendChild(textArea)
+        form.appendChild(btn)
+
+        textEditor.appendChild(form)
+
+        backdrop.appendChild(textEditor)
+
+        document.body.appendChild(backdrop)
+
+        setTimeout(() => {
+            nameInput.focus()
+        })
+    }
+
 
     function updateToolTips() {
         const contextMenu2 = document.createElement('div')
@@ -706,6 +815,10 @@
                 rename.appendChild(form)
                 backdrop.appendChild(rename)
                 document.body.appendChild(backdrop)
+                setTimeout(() => {
+                    input.focus()
+                    input.select()
+                })
             }
 
             function reloadCategories(show) {
@@ -847,6 +960,9 @@
 
                             backdrop.remove()
                             document.body.appendChild(newCat)
+                            setTimeout(() => {
+                                nameLabel.focus()
+                            })
                         }
 
                         res.forEach(e => {
@@ -1428,8 +1544,9 @@
     }, false)
 
     function uploadFiles(recievedFiles) {
+        console.log(recievedFiles)
         for (let i = 0; i < recievedFiles.length; i++) {
-            if (recievedFiles[i].type == '') {
+            if (recievedFiles[i].type == '' && recievedFiles[i].size == 0) {
                 showError('Tipo de arquivo não suportado')
                 return
             }
@@ -1449,8 +1566,12 @@
                 },
                 body: formData,
             })
-            .then(res => res.json())
+            .then(res => {
+                console.log(res)
+                return res.json()
+            })
             .then(result => {
+                console.log(result)
                 result.forEach(e => {
                     const time = e.date.split(" ")[1]
                     const date = e.date.split(" ")[0]

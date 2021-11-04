@@ -24,10 +24,24 @@
 
 <body>
     <header>
-        <label for="upload" class="upload__btn">
-            <p>Upload</p>
-            <input type="file" id="upload" name="upload" multiple>
-        </label>
+        <div class="upload__btn">
+            <ion-icon name="add"></ion-icon>
+            <p>New</p>
+            <div class="dropdown">
+                <div class="createfolder">
+                    <ion-icon name="add-circle-outline"></ion-icon><span>Folder</span>
+                </div>
+                <label for="upload">
+                    <ion-icon name="cloud-upload"></ion-icon>
+                    <span>Upload</span>
+                    <input type="file" id="upload" name="upload" multiple>
+                </label>
+                <div class="newtext">
+                    <ion-icon name="document"></ion-icon>
+                    <span>Text file</span>
+                </div>
+            </div>
+        </div>
         <div class="search">
             <ion-icon name="ios-search"></ion-icon>
             <input type="text" name="search" id="search" placeholder="Search files">
@@ -68,9 +82,6 @@
     </div>
     <div class="path">
         <ion-icon name="arrow-back"></ion-icon><span>/</span>
-        <div class="createfolder">
-            <ion-icon name="add-circle-outline"></ion-icon><span>New folder</span>
-        </div>
     </div>
     <div class="files">
         <!-- <div class="spinner"></div> -->

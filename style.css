@@ -1,0 +1,330 @@
+:root {
+    --bg-trio: hsl(240, 11%, 81%);
+}
+
+/* body config */
+body {
+	overflow-x: hidden;
+    background-color: var(--bg-alt);
+}
+
+* {
+    scroll-behavior: smooth;
+}
+
+/* header config */
+header{
+    display: flex;
+    font-size: 15px;
+    gap: 10vmin;
+    color: var(--main-font-color);
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    text-decoration: none;
+}
+
+header .login {
+    color: var(--main-font-color);
+    background-color: var(--btn);
+    text-decoration: none;
+    border-radius: var(--main-roundness);
+    padding: 10px 15px;
+    border: solid 2px hsl(137 57% 47%);
+    transition: ease-in-out 500ms;
+    position: relative;
+}
+
+header .login:hover {
+    background-color: hsl(137 57% 47%);
+    animation: jump 500ms infinite;
+}
+
+@keyframes jump {
+    0% {
+        top: 0;
+    }
+
+    50% {
+        top: 5px;
+    }
+
+    100% {
+        top: 0;
+    }
+}
+
+header a {
+    text-decoration: none;
+    color: var(--main-font-color);
+}
+
+/* quadrado fundo */
+.quad {
+    width: 250vmin;
+    height: 200vmin;
+    background-color: var(--bg-main);
+    transform: rotate(-20deg);
+    position: absolute;
+    z-index: -1;
+    top: -155vmin;
+    left: -20vmin;
+    right: 0;
+    border-radius: var(--big-roundness);
+    box-shadow: 100px 50px 0px hsl(132, 59%, 39%);
+    margin: 0 auto;
+}
+
+/* letras fundo */
+.quad h1 {
+    color: var(--main-font-color);
+    font-size: 55px;
+    position: absolute;
+    z-index: 0;
+    left: 20vmin;
+    bottom: 10px;
+}
+
+/* config trio */
+.trio {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    gap: 40px;
+    margin-top: 90vmin;
+}
+
+.trio>div {
+    width: 200px;
+    min-height: 150px;
+    display: flex;
+    background-color: var(--bg-trio);
+    border-radius: var(--main-roundness);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+
+ion-icon {
+    font-size: 50px;
+}
+
+
+/* listras */
+.listra {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 300px;
+    background-color: var(--bg-main);
+    z-index: -1;
+}
+
+.listra.alt {
+    margin-top: 100px;
+}
+
+.listra .subLis {
+    position: absolute;
+    width: 80%;
+    height: 10px;
+    background-color: var(--btn);
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.listra .subLis.alt {
+    left: 0;
+}
+
+.cont{
+    display: flex;
+    align-items: center;
+    color: var(--main-font-color);
+    font-size: 40px;
+    padding: 20px;
+    gap: 20px;
+}
+
+.cont > div{
+    display: flex;
+    text-align: justify;
+    flex-direction: column;
+    max-width: 500px;
+    flex: 1;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.cont img{
+    width: 50vw;
+    max-width: 600px;
+}
+
+/* conteudos 1 */
+.cont1 {
+    margin-top: 250px;
+}
+
+.cont1 > div h1 {
+    margin-top: 150px;
+}
+
+.cont1 > div a {
+    font-size: 20px;
+    text-decoration: none;
+    color: var(--main-font-color);
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: var(--btn);
+    border: 2px solid hsl(137 57% 47%);
+    border-radius: var(--main-roundness);
+    transition: ease-in-out 500ms;
+}
+
+.cont1 > div a:hover {
+    background-color: hsl(137 57% 47%);
+    animation: jump2 500ms infinite;
+}
+
+/* conteudos 2 */
+.cont2 {
+    margin-top: 200px;
+}
+
+.cont2 img {
+    max-width: 250px;
+}
+
+.cont2 > div h1 {
+    margin: 0 auto;
+}
+
+/* conteudo 3 */
+.cont3 {
+    margin-top: 200px;
+    font-size: var(--bigger-font-size);
+}
+
+.cont3 > div{
+    gap: 0px;
+}
+
+.cont3 img {
+    max-width: 600px;
+}
+
+.cont3 > div h1{
+    margin-bottom: 10px;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto;
+    padding: 20px;
+    font-size: var(--s-font-size);
+    border-top: 1px solid var(--border-main);
+    color: white;
+}
+
+footer a {
+    color: hsl(215 68% 53%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* celular */
+@media (max-width: 699px) {
+    header {
+        flex-direction: column;
+        gap: 20px;
+        font-size: 15px;
+    }
+
+    .quad {
+        height: 215vmin;
+    }
+
+    .quad h1 {
+        font-size: 15px;
+        left: 10px;
+    }
+
+    .trio {
+        flex-direction: column;
+    }
+
+    .cont img{
+        width: 80vw;
+    }
+
+    .cont1 {
+        flex-direction: column;
+    }
+
+    .cont1 > div {
+        padding: 0;
+        gap: 10px;
+        max-width: 80%;
+    }
+
+    .cont1 > div h1 {
+        font-size: 60px;
+        margin-top: 0;
+    }
+
+    .cont2 img {
+        margin-top: 50px;
+    }
+
+    .cont2 {
+        flex-direction: column;
+        margin-top: 270px;
+    }
+
+    .cont2 > div h1 {
+        margin-bottom: 25px;
+    }
+
+    .cont2 > div {
+        max-width: 80%;
+    }
+
+    .cont3 {
+        flex-direction: column;
+    }
+
+    .cont > div {
+        text-align: left;
+    }
+}
