@@ -3,7 +3,7 @@
     typeAnimation(welcomeSpan, welcomeSpan.getAttribute('text'), 50, startForm, 200, 2000)
 
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com', 'https://ec2-18-230-154-13.sa-east-1.compute.amazonaws.com:8080']
-    const url = urls[2]
+    const url = urls[1]
 
     let registering = false
 
