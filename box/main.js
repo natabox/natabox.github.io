@@ -386,7 +386,7 @@
             })
             renderAll()
         })
-        .catch(e => {
+        .catch(error => {
             if (error.message == 'password') {
                 window.location.href = window.location.href.replace('/box', '/account')
                 return
@@ -1106,18 +1106,18 @@
                     if (e.target == backdrop) backdrop.remove()
                 }
 
-                if (imgTypes.includes(files[selectedIndex].type.toLowerCase())) {
+                if (types.img.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('img')
                     el.src = files[selectedIndex].path
-                } else if (videoTypes.includes(files[selectedIndex].type.toLowerCase())) {
+                } else if (types.video.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('video')
                     el.src = files[selectedIndex].path
                     el.setAttribute('type', 'video/' + files[selectedIndex].type.toLowerCase())
                     el.setAttribute('controls', 'true')
-                } else if (files[selectedIndex].type.toLowerCase() == 'pdf' || files[selectedIndex].type.toLowerCase() == 'txt') {
+                } else if (visualizable.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('iframe')
                     el.src = files[selectedIndex].path
-                } else if (audioTypes.includes(files[selectedIndex].type.toLowerCase())) {
+                } else if (types.audio.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('audio')
                     el.src = files[selectedIndex].path
                     el.setAttribute('controls', 'true')

@@ -107,7 +107,8 @@
             })
             .catch(err => {
                 loading.remove()
-                alert('Pasta não encontrada')
+                console.error(err)
+                // alert('Pasta não encontrada')
             })
 
         fetch(path == '/' ? `${url}/folder/files/public/param/${param}` : `${url}/folder/files/public/id/${pathArr[pathArr.length - 2]}`, {
@@ -130,13 +131,13 @@
 
                     const jsDate = new Date(y, String(parseInt(mo) - 1), d, h, m, s)
 
-                    files.push(new File(e.id, e.name, e.type, (parseFloat(e.size) / 1024).toFixed(2) + ' KB', jsDate, e.path, e.categoryId))
+                    files.push(new File(e.id, e.name, e.type, (parseFloat(e.size) / 1024).toFixed(2) + ' KB', jsDate, e.path, e.categoryId, e.folderid, '../assets/img/types/'))
                 })
                 if (loaded) renderAll()
                 loaded = true
             })
             .catch(err => {
-
+                console.error(err)
             })
     }
 
@@ -209,10 +210,10 @@
                     if (e.target == backdrop) backdrop.remove()
                 }
 
-                if (imgTypes.includes(files[selectedIndex].type.toLowerCase())) {
+                if (types.img.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('img')
                     el.src = files[selectedIndex].path
-                } else if (videoTypes.includes(files[selectedIndex].type.toLowerCase())) {
+                } else if (types.video.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('video')
                     el.src = files[selectedIndex].path
                     el.setAttribute('type', 'video/' + files[selectedIndex].type.toLowerCase())
@@ -220,7 +221,7 @@
                 } else if (files[selectedIndex].type.toLowerCase() == 'pdf' || files[selectedIndex].type.toLowerCase() == 'txt') {
                     el = document.createElement('iframe')
                     el.src = files[selectedIndex].path
-                } else if (audioTypes.includes(files[selectedIndex].type.toLowerCase())) {
+                } else if (types.audio.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('audio')
                     el.src = files[selectedIndex].path
                     el.setAttribute('controls', 'true')

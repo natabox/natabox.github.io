@@ -1,10 +1,22 @@
-const imgTypes = ['png', 'jpg', 'jpeg', 'jfif', 'ico', 'svg', 'gif']
-const videoTypes = ['mp4', 'mov', 'wmv', 'avi', 'mkv', 'webp']
-const audioTypes = ['m4a', 'mp3', 'wav', 'wma', 'ogg', 'aac']
-const zipTypes = ['zip', '7z', 'rar', 'pie', 'xz', 'tar']
-const slideTypes = ['ppt', 'pptx']
-const sheetTypes = ['xls', 'xlsx']
-const codeTypes = ['cs', 'c', 'cpp', 'js', 'css', 'html', 'go', 'java', 'jar', 'h', 'py', 'json', 'php', 'bat', 'cmd']
+const types = {
+    img: ['png', 'jpg', 'jpeg', 'jfif', 'ico', 'svg', 'gif', 'tif', 'tiff', 'bmp'],
+    video: ['mp4', 'mov', 'wmv', 'avi', 'mkv', 'webp', 'webm'],
+    audio: ['m4a', 'mp3', 'wav', 'wma', 'ogg', 'aac'],
+    zip: ['zip', '7z', 'rar', 'pie', 'xz', 'tar'],
+    slide: ['ppt', 'pptx'],
+    sheet: ['xls', 'xlsx'],
+    code: [
+        'md', 'markdown', 'cs', 'c', 'cpp', 'js',
+        'css', 'html', 'java', 'jar', 'h', 'py',
+        'json', 'php', 'bat', 'cmd', 'dos', 'jsx'
+    ],
+    txt: ['txt', 'bib', 'readme']
+}
+const visualizable = ['pdf'].concat(types.code, types.txt)
+const notVisualizable = ['md', 'markdown', 'jar']
+for (let i = 0; i < notVisualizable.length; i++) {
+    visualizable.splice(visualizable.indexOf(notVisualizable[i]), 1)
+}
 
 class File {
     id
@@ -15,7 +27,6 @@ class File {
     path
     element
     catid
-    imgTypes
     folder
     constructor(id, name, type, size, date, path, cat, folder) {
         this.id = id
@@ -35,27 +46,21 @@ class File {
         img.className = 'file__img'
 
         function setBg(imgname) {
-            img.style = `background-image: url(assets/img/types/${imgname}.png)`
+            img.style = `background-image: url(${document.title.includes('folder') ? '../' : ''}assets/img/types/${imgname}.png)`
         }
-        if (imgTypes.includes(this.type.toLowerCase()) && renderImgs) {
+        if (types.img.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
             img.style = `background-image: url(${this.path})`
         } else {
-            if (imgTypes.includes(this.type.toLowerCase())) {
-                setBg('img')
-            } else if (videoTypes.includes(this.type.toLowerCase())) {
-                setBg('video')
-            } else if (audioTypes.includes(this.type.toLowerCase())) {
-                setBg('audio')
-            } else if (zipTypes.includes(this.type.toLowerCase())) {
-                setBg('zip')
-            } else if (slideTypes.includes(this.type.toLowerCase())) {
-                setBg('slide')
-            } else if (sheetTypes.includes(this.type.toLowerCase())) {
-                setBg('sheet')
-            } else if (codeTypes.includes(this.type.toLowerCase())) {
-                setBg('code')
-            } else {
+            let set = false
+            for (const [key, value] of Object.entries(types)) {
+                if (value.includes(this.type.toLowerCase())) {
+                    setBg(key)
+                    set = true
+                    break
+                }
+            }
+            if (!set) {
                 const testImg = new Image()
                 testImg.onload = () => {
                     setBg(this.type)
