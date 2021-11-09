@@ -89,8 +89,6 @@
     sortSelect.oninput = renderAll
     orderSelect.oninput = renderAll
 
-    let fileContainers = document.querySelectorAll('.file')
-    let folderContainers = document.querySelectorAll('.folder')
 
     logoutBtn.onclick = () => {
         localStorage.removeItem('account')
@@ -279,9 +277,8 @@
     let texts
 
     if (localStorage.getItem('lang') != undefined) {
-        const currentLang = localStorage.getItem('lang')
-        texts = langs[currentLang]
-        langsBtns[0].parentElement.className = `lang ${currentLang}`
+        texts = langs[localStorage.getItem('lang')]
+        langsBtns[0].parentElement.className = `lang ${localStorage.getItem('lang')}`
     } else {
         texts = langs.brazil
     }
@@ -704,9 +701,7 @@
             contextMenu2.remove()
         })
 
-        fileContainers = document.querySelectorAll('.file')
-        folderContainers = document.querySelectorAll('.folder')
-        fileContainers.forEach(e => {
+        document.querySelectorAll('.file').forEach(e => {
             e.addEventListener('dragstart', e => {
                 selectedElement = e.target
                 findObject()
@@ -1148,7 +1143,7 @@
                 tooltip.remove()
             })
         })
-        folderContainers.forEach(e => {
+        document.querySelectorAll('.folder').forEach(e => {
             e.addEventListener('dragover', e => {
                 if (e.dataTransfer.items[0] != undefined) return
                 if (!e.target.classList.contains('folder')) {
