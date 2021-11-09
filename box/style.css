@@ -111,6 +111,7 @@ body {
     position: absolute;
     inset: 0;
     background-color: hsl(222 58% 17% / 50%);
+    z-index: 3;
 }
 
 .files,

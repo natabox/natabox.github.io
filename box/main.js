@@ -86,18 +86,8 @@
         renderAll()
     }
 
-
-    let sortMethod = sortSelect.value
-    let direction = parseInt(orderSelect.value)
-
-    sortSelect.oninput = () => {
-        sortMethod = sortSelect.value
-        renderAll()
-    }
-    orderSelect.oninput = () => {
-        direction = parseInt(orderSelect.value)
-        renderAll()
-    }
+    sortSelect.oninput = renderAll
+    orderSelect.oninput = renderAll
 
     let fileContainers = document.querySelectorAll('.file')
     let folderContainers = document.querySelectorAll('.folder')
@@ -418,7 +408,7 @@
                 aname = a[key].toLowerCase()
                 bname = b[key].toLowerCase()
             }
-            if (direction == 1) {
+            if (parseInt(orderSelect.value) == 1) {
                 if (aname > bname) {
                     return 1
                 }
@@ -426,7 +416,7 @@
                     return -1
                 }
                 return 0
-            } else if (direction == -1) {
+            } else if (parseInt(orderSelect.value) == -1) {
                 if (aname < bname) {
                     return 1
                 }
@@ -452,7 +442,7 @@
             tooltips[i].remove()
         }
         searchInput.value = ''
-        sortBy(sortMethod)
+        sortBy(sortSelect.value)
         filesContainer.innerHTML = ''
         foldersContainer.innerHTML = ''
         files.forEach(e => {
@@ -549,7 +539,7 @@
                 folders.sort((a, b) => {
                     const aname = a.name.toLowerCase()
                     const bname = b.name.toLowerCase()
-                    if (direction == 1) {
+                    if (parseInt(orderSelect.value) == 1) {
                         if (aname > bname) {
                             return 1
                         }
@@ -557,7 +547,7 @@
                             return -1
                         }
                         return 0
-                    } else if (direction == -1) {
+                    } else if (parseInt(orderSelect.value) == -1) {
                         if (aname < bname) {
                             return 1
                         }
@@ -1421,6 +1411,11 @@
             buttons.remove()
             paragraph.remove()
             confirmation.appendChild(spinner)
+            const spinner2 = document.createElement('div')
+            spinner2.className = 'spinner'
+            files[selectedIndex].element.appendChild(spinner2)
+            files[selectedIndex].element.classList.add('moving')
+            backdrop.remove()
             const acc = JSON.parse(decrypt(localStorage.getItem('account')))
             fetch(`${url}/files/${files[selectedIndex].id}`, {
                 method: 'DELETE',
@@ -1430,7 +1425,6 @@
                 }
             }).then(() => {
                 getAllFiles()
-                backdrop.remove()
             })
         }
         document.body.appendChild(backdrop)
