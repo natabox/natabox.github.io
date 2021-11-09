@@ -50,7 +50,12 @@ class File {
         }
         if (types.img.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
-            img.style = `background-image: url(${this.path})`
+            let bgImg = new Image()
+            bgImg.onload = () => {
+                img.style = `background-image: url(${bgImg.src})`
+                img.classList.add('loaded')
+            }
+            bgImg.src = this.path
         } else {
             let set = false
             for (const [key, value] of Object.entries(types)) {
@@ -65,7 +70,7 @@ class File {
                 testImg.onload = () => {
                     setBg(this.type)
                 }
-                testImg.src = `assets/img/types/${this.type}.png`
+                testImg.src = `${document.title.includes('folder') ? '../' : ''}assets/img/types/${this.type}.png`
             }
         }
         div.appendChild(img)
