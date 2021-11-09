@@ -4,6 +4,8 @@
     let filesContainer = document.querySelector('.files')
     let foldersContainer = document.querySelector('.folders')
 
+    const downloading = document.querySelector('.downloading')
+
     const files = []
     const folders = []
 
@@ -191,14 +193,21 @@
             }
 
             function download() {
+                downloading.classList.add('show')
                 fetch(files[selectedIndex].path)
                     .then(res => res.blob())
                     .then(blob => {
+                        downloading.classList.remove('show')
                         const link = document.createElement('a')
                         link.href = URL.createObjectURL(blob)
                         link.target = '_blank'
                         link.download = files[selectedIndex].name
                         link.click()
+                        showSuccess('Downloaded')
+                    })
+                    .catch(e => {
+                        downloading.classList.remove('show')
+                        showError('Tente novamente')
                     })
             }
 
@@ -283,6 +292,35 @@
             return true
         })
         pathEl.children[1].innerText += name + "/"
+    }
+
+    function createIcon(name) {
+        const icon = document.createElement('ion-icon')
+        icon.setAttribute('name', name)
+        return icon
+    }
+
+    function showError(msg) {
+        createInfo('error', 'close-circle-outline', msg)
+    }
+
+    function showSuccess(msg) {
+        createInfo('success', 'checkmark-circle-outline', msg)
+    }
+
+    function createInfo(type, icon, msg) {
+        downloading.classList.remove('show')
+        document.querySelectorAll('.info').forEach(e => e.remove())
+        const successEl = document.createElement('div')
+        successEl.className = 'info ' + type
+        successEl.appendChild(createIcon(icon))
+        const p = document.createElement('p')
+        p.innerText = msg
+        successEl.appendChild(p)
+        document.body.appendChild(successEl)
+        document.addEventListener('click', () => {
+            successEl.remove()
+        })
     }
 
 

@@ -1051,19 +1051,23 @@ header .search input:focus {
 
 .drop {
     position: fixed;
-    inset: 100px 150px;
     background-color: hsl(0 0% 10% / 60%);
     backdrop-filter: blur(5px);
     border-radius: 20px;
     box-shadow: var(--main-shadow);
-    transform: translateY(200%);
-    transition: transform 0.2s ease;
+    /* transform: translateY(200%); */
+    bottom: -100%;
+    height: 90%;
+    left: 10vw;
+    right: 10vw;
+    transition: bottom 0.2s ease;
     /* display: none; */
     pointer-events: none;
 }
 
 .drop.show {
-    transform: translateY(0);
+    bottom: 50%;
+    transform: translateY(50%);
 }
 
 .drop .drop__inner {
@@ -1100,7 +1104,9 @@ header .search input:focus {
 }
 
 .uploading,
-.error {
+.error,
+.downloading,
+.success {
     position: fixed;
     left: 50%;
     top: 50px;
@@ -1124,11 +1130,22 @@ header .search input:focus {
     color: hsl(0 100% 50%);
 }
 
-.uploading {
-    top: -50%;
+.success {
+    border: 1px solid hsl(100 100% 50%);
+    color: hsl(100 100% 50%);
 }
 
-.uploading.show {
+.success ion-icon {
+    font-size: 35px;
+}
+
+.uploading,
+.downloading {
+    top: -100%;
+}
+
+.uploading.show,
+.downloading.show {
     top: 50px;
 }
 

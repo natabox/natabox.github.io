@@ -11,6 +11,7 @@
     const dropArea = document.querySelector('.drop')
     const logoutBtn = document.querySelector('.logout')
     const uploading = document.querySelector('.uploading')
+    const downloading = document.querySelector('.downloading')
     const sortSelect = document.querySelector('select[name="sort"]')
     const orderSelect = document.querySelector('select[name="order"]')
     const previewInput = document.querySelector('input[name="preview"]')
@@ -149,6 +150,7 @@
             Folder: 'Folder',
             TextFile: 'Text file',
             FolderFiles: 'Delete all files from the folder to delete it',
+            Try: 'Try again',
         },
         brazil: {
             Download: 'Download',
@@ -192,6 +194,7 @@
             Folder: 'Pasta',
             TextFile: 'Arquivo de texto',
             FolderFiles: 'Apague todos os arquivos da pasta para apagá-la',
+            Try: 'Tente novamente',
         },
         japan: {
             Download: 'ダウンロード',
@@ -235,6 +238,7 @@
             Folder: 'フォルダ',
             TextFile: 'テキストファイル',
             FolderFiles: 'フォルダからすべてのファイルを削除して削除します',
+            Try: 'もう一度やり直してください',
         },
         russia: {
             Download: 'скачать',
@@ -278,6 +282,7 @@
             Folder: 'папка',
             TextFile: 'текстовый файл',
             FolderFiles: 'Удалите все файлы из папки, чтобы удалить ее',
+            Try: 'Повторить',
         }
     }
 
@@ -1323,14 +1328,21 @@
     }
 
     function downloadFile() {
+        downloading.classList.add('show')
         fetch(files[selectedIndex].path)
             .then(response => response.blob())
             .then(blob => {
+                downloading.classList.remove('show')
                 const link = document.createElement('a')
                 link.href = URL.createObjectURL(blob)
                 link.target = '_blank'
                 link.download = files[selectedIndex].name
                 link.click()
+                showSuccess('Downloaded')
+            })
+            .catch(e => {
+                downloading.classList.remove('show')
+                showError(texts.Try)
             })
     }
 
@@ -1549,6 +1561,8 @@
                 return
             }
         }
+
+        document.querySelectorAll('.info').forEach(e => e.remove())
         uploading.classList.add('show')
         const acc = JSON.parse(decrypt(localStorage.getItem('account')))
         const formData = new FormData()
@@ -1588,6 +1602,10 @@
                 })
                 renderAll()
                 uploading.classList.remove('show')
+                const successFileCount = result.reduce((prev, cur) => {
+                    return cur != null ? prev + 1 : prev
+                }, 0)
+                showSuccess(`${successFileCount} ${successFileCount <= 1 ? 'file' : 'files'} uploaded!`)
             })
             .catch(err => {
                 console.error('Error:', err)
@@ -1603,16 +1621,26 @@
     }
 
     function showError(msg) {
+        createInfo('error', 'close-circle-outline', msg)
+    }
+
+    function showSuccess(msg) {
+        createInfo('success', 'checkmark-circle-outline', msg)
+    }
+
+    function createInfo(type, icon, msg) {
         uploading.classList.remove('show')
-        const errorEl = document.createElement('div')
-        errorEl.className = 'error'
-        errorEl.appendChild(createIcon('close-circle-outline'))
+        downloading.classList.remove('show')
+        document.querySelectorAll('.info').forEach(e => e.remove())
+        const successEl = document.createElement('div')
+        successEl.className = 'info ' + type
+        successEl.appendChild(createIcon(icon))
         const p = document.createElement('p')
         p.innerText = msg
-        errorEl.appendChild(p)
-        document.body.appendChild(errorEl)
+        successEl.appendChild(p)
+        document.body.appendChild(successEl)
         document.addEventListener('click', () => {
-            errorEl.remove()
+            successEl.remove()
         })
     }
 
