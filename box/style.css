@@ -433,10 +433,24 @@ body {
     top: 0;
     left: 0;
     display: flex;
+    flex-direction: column;
+    gap: 5px;
     justify-content: center;
     align-items: center;
     animation: opacity 0.5s ease forwards;
     z-index: 100;
+}
+
+.backdrop>button {
+    font-size: var(--big-font-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.backdrop>button>ion-icon {
+    font-size: var(--bigger-font-size);
 }
 
 @keyframes opacity {
@@ -470,6 +484,7 @@ body {
 .textEditor textarea {
     resize: vertical;
     min-height: 30px !important;
+    height: 400px;
 }
 
 
@@ -805,7 +820,8 @@ body {
 
 .rename form button,
 .newfolder form button,
-.textEditor form button {
+.textEditor form button,
+.backdrop>button {
     background-color: hsl(var(--file-selected-border));
     color: white;
     padding: 10px 20px;
@@ -815,14 +831,16 @@ body {
 
 .rename form button:hover,
 .newfolder form button:hover,
-.textEditor form button:hover {
+.textEditor form button:hover,
+.backdrop>button:hover {
     background-color: hsl(var(--file-bg-blue-alt));
 
 }
 
 .rename form button:active,
 .newfolder form button:active,
-.textEditor form button:hover {
+.textEditor form button:active,
+.backdrop>button:active {
     background-color: hsl(var(--file-bg-blue-alt2));
 }
 
@@ -1230,6 +1248,22 @@ img.visualize {
     border-radius: var(--main-roundness);
     padding: 50px;
     font-size: 1.5rem;
+}
+
+.visualize>textarea {
+    /* width: 90vw; */
+    /* max-width: 1000px; */
+    /* max-height: 1000px; */
+    /* height: 90vh; */
+    /* resize: none; */
+    /* padding: 10px; */
+}
+
+.visualize>.CodeMirror {
+    width: 90vw;
+    max-width: 1000px;
+    max-height: 1000px;
+    height: 90vh;
 }
 
 footer {

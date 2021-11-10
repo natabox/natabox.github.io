@@ -139,6 +139,7 @@
             TextFile: 'Text file',
             FolderFiles: 'Delete all files from the folder to delete it',
             Try: 'Try again',
+            Save: 'Save',
         },
         brazil: {
             Download: 'Download',
@@ -183,6 +184,7 @@
             TextFile: 'Arquivo de texto',
             FolderFiles: 'Apague todos os arquivos da pasta para apagá-la',
             Try: 'Tente novamente',
+            Save: 'Salvar',
         },
         japan: {
             Download: 'ダウンロード',
@@ -227,6 +229,7 @@
             TextFile: 'テキストファイル',
             FolderFiles: 'フォルダからすべてのファイルを削除して削除します',
             Try: 'もう一度やり直してください',
+            Save: 'セーブ',
         },
         russia: {
             Download: 'скачать',
@@ -271,6 +274,7 @@
             TextFile: 'текстовый файл',
             FolderFiles: 'Удалите все файлы из папки, чтобы удалить ее',
             Try: 'Повторить',
+            Save: 'спасать',
         }
     }
 
@@ -1105,8 +1109,59 @@
                     el.setAttribute('type', 'video/' + files[selectedIndex].type.toLowerCase())
                     el.setAttribute('controls', 'true')
                 } else if (visualizable.includes(files[selectedIndex].type.toLowerCase())) {
-                    el = document.createElement('iframe')
-                    el.src = files[selectedIndex].path
+                    if (this.type == 'pdf') {
+                        el = document.createElement('iframe')
+                        el.src = files[selectedIndex].path
+                    } else {
+                        const spinner = document.createElement('div')
+                        spinner.className = 'spinner'
+                        el = document.createElement('div')
+                        el.appendChild(spinner)
+                        const saveBtn = document.createElement('button')
+                        const saveBtnSpan = document.createElement('span')
+                        const saveIcon = createIcon('save')
+                        saveBtnSpan.innerText = texts.Save
+                        saveBtn.appendChild(saveIcon)
+                        saveBtn.appendChild(saveBtnSpan)
+                        let mode = null
+                        if (files[selectedIndex].type == 'html') mode = 'xml'
+                        else if (files[selectedIndex].type == 'css') mode = 'css'
+                        else if (files[selectedIndex].type == 'js') mode = 'javascript'
+                        else if (files[selectedIndex].type == 'c' || files[selectedIndex].type == 'cs' || files[selectedIndex].type == 'cpp') mode = 'clike'
+                        const editor = CodeMirror(el, {
+                            lineNumbers: true,
+                            tabSize: 4,
+                            mode: mode,
+                            lineWrapping: true,
+                            theme: 'material-darker'
+                        })
+                        saveBtn.onclick = () => {
+                            fetch(`${url}/files/text/${files[selectedIndex].id}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        User: JSON.parse(decrypt(localStorage.getItem('account'))).email,
+                                        Password: JSON.parse(decrypt(localStorage.getItem('account'))).password,
+                                    },
+                                    body: editor.getValue()
+                                })
+                                .catch(e => {
+                                    console.error(e)
+                                })
+                        }
+                        console.log(files[selectedIndex].path)
+                        fetch(files[selectedIndex].path, {
+                                headers: {
+                                    'cache-control': 'no-cache'
+                                }
+                            })
+                            .then(res => res.text())
+                            .then(txt => {
+                                el.removeChild(spinner)
+                                editor.setValue(txt)
+                                backdrop.appendChild(saveBtn)
+                            })
+                            .catch(err => console.error(err))
+                    }
                 } else if (types.audio.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('audio')
                     el.src = files[selectedIndex].path

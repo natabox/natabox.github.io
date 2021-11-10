@@ -59,12 +59,8 @@ class File {
         } else if (types.video.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
             const videoEl = document.createElement('video')
-            // videoEl.setAttribute('controls', 'false')
-            videoEl.setAttribute('muted', '')
-            videoEl.onplay = () => {
-                videoEl.pause()
-                videoEl.currentTime = 0
-            }
+            videoEl.loop = true
+            videoEl.muted = true
             videoEl.onloadeddata = () => {
                 videoEl.currentTime = 0
                 img.classList.add('loaded')
@@ -72,6 +68,16 @@ class File {
                 const playCircle = document.createElement('ion-icon')
                 playCircle.setAttribute('name', 'play-circle')
                 img.appendChild(playCircle)
+                this.element.addEventListener('mouseover', () => {
+                    videoEl.currentTime = 0
+                    videoEl.play()
+                    videoEl.muted = true
+                    videoEl.loop = true
+                })
+                this.element.addEventListener('mouseleave', () => {
+                    videoEl.currentTime = 0
+                    videoEl.pause()
+                })
             }
             videoEl.src = this.path
         } else {
