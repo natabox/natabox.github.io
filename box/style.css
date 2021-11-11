@@ -214,26 +214,26 @@ body {
 }
 
 .file .file__img.rendered::after {
-    content: '';
-    position: absolute;
+    /* content: ''; */
+    /* position: absolute; */
     /* background-color: hsl(215 21% 15%); */
-    inset: 0;
-    background: linear-gradient(to right, var(--bg-alt) 0%, hsl(216, 8%, 20%) 25%, var(--bg-alt) 50%, var(--bg-alt) 100%);
-    background-repeat: no-repeat;
-    background-size: 275px 400px;
-    animation: skeleton 1s linear infinite;
+    /* inset: 0; */
+    /* background: linear-gradient(to right, var(--bg-alt) 0%, hsl(216, 8%, 20%) 25%, var(--bg-alt) 50%, var(--bg-alt) 100%); */
+    /* background-repeat: no-repeat; */
+    /* background-size: 275px 400px; */
+    /* animation: skeleton 1s linear infinite; */
 }
 
 .file .file__img.rendered.loaded::after {
-    display: none;
+    /* display: none; */
 }
 
 /* .file .file__img { */
 /* height: 137px; */
 /* } */
 
-.file .file__img.rendered.loaded>video,
-.file .file__img.rendered.loaded>img {
+.file .file__img.rendered>video,
+.file .file__img.rendered>img {
     position: absolute;
     top: 50%;
     left: 50%;

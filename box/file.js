@@ -45,47 +45,15 @@ class File {
         const img = document.createElement('div')
         img.className = 'file__img'
 
-        function reduceImg(url, w, h) {
-            return new Promise((resolve, reject) => {
-                console.log(url)
-                const canvas = document.createElement('canvas')
-                canvas.width = w
-                canvas.height = h
-                const ctx = canvas.getContext('2d')
-                const reimg = new Image()
-                reimg.crossOrigin = 'Anonymous'
-                reimg.src = url
-                reimg.onload = () => {
-                    try {
-                        ctx.scale(w / reimg.width, h / reimg.height)
-                        ctx.drawImage(reimg, 0, 0)
-                        resolve(canvas.toDataURL())
-                    } catch (e) {
-                        reject(e)
-                    }
-                }
-            })
-        }
-
         function setBg(imgname) {
             img.style = `background-image: url(${document.title.includes('folder') ? '../' : ''}assets/img/types/${imgname}.png)`
         }
         if (types.img.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
-            let bgImg = new Image()
-            // bgImg.crossOrigin = 'Anonymous'
+            const bgImg = new Image()
             bgImg.onload = () => {
-                /* reduceImg(this.path, 250, 250)
-                    .then(data => {
-                        //img.style = `background-image: url(${data})`
-                        console.log(data)
-                    }).catch(e => {
-                        console.error(e)
-                    }) */
-                //img.style = `background-image: url(${bgImg.src})`
-
                 img.appendChild(bgImg)
-                img.classList.add('loaded')
+                // img.classList.add('loaded')
             }
             bgImg.src = this.path
         } else if (types.video.includes(this.type.toLowerCase()) && renderImgs) {
