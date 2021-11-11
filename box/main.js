@@ -1148,7 +1148,6 @@
                                     console.error(e)
                                 })
                         }
-                        console.log(files[selectedIndex].path)
                         fetch(files[selectedIndex].path, {
                                 headers: {
                                     'cache-control': 'no-cache'
