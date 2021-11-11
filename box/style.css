@@ -232,7 +232,8 @@ body {
 /* height: 137px; */
 /* } */
 
-.file .file__img.rendered.loaded>video {
+.file .file__img.rendered.loaded>video,
+.file .file__img.rendered.loaded>img {
     position: absolute;
     top: 50%;
     left: 50%;
