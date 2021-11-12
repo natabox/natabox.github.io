@@ -93,7 +93,7 @@ body {
 }
 
 .folders {
-    border-top: 1px solid var(--border-main);
+    border-bottom: 1px solid var(--border-main);
 }
 
 .file .spinner {
@@ -1093,6 +1093,10 @@ header .search input:focus {
     z-index: 10000;
 }
 
+.drop-area.active {
+    pointer-events: all;
+}
+
 .drop {
     position: fixed;
     background-color: hsl(0 0% 10% / 60%);
@@ -1107,6 +1111,7 @@ header .search input:focus {
     transition: bottom 0.2s ease;
     /* display: none; */
     pointer-events: none;
+    z-index: 10;
 }
 
 .drop.show {

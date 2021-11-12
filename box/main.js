@@ -490,22 +490,10 @@
                 return res.json()
             })
             .then(result => {
-                for (let i = 0; i < result.length; i++) {
-                    const x = result[i]
-
-                    const time = x.date.split(" ")[1]
-                    const date = x.date.split(" ")[0]
-
-                    const h = time.split(":")[0]
-                    const m = time.split(":")[1]
-                    const s = time.split(":")[2]
-
-                    const d = date.split("/")[0]
-                    const mo = date.split("/")[1]
-                    const y = date.split("/")[2]
-
-                    const jsDate = new Date(y, String(parseInt(mo) - 1), d, h, m, s)
-
+                for (x of result) {
+                    const time = x.date.split(" ")[1].split(":")
+                    const date = x.date.split(" ")[0].split("/")
+                    const jsDate = new Date(date[2], String(parseInt(date[1]) - 1), date[0], time[0], time[1], time[2])
                     files.push(
                         new File(x.id, x.name, x.type, (parseFloat(x.size) / 1024).toFixed(2) + ' KB', jsDate, x.path, x.categoryId)
                     )
@@ -1548,23 +1536,29 @@
         uploadFiles(filesInput.files)
     })
 
-    document.body.addEventListener('dragenter', dragging, false)
-    document.body.addEventListener('dragover', dragging, false)
+    document.addEventListener('dragenter', dragging, false)
+    document.addEventListener('dragover', dragging, false)
+    document.addEventListener('dragleave', notDragging, false)
+
+    const dropAreaBlock = document.querySelector('.drop-area')
 
     function dragging(e) {
         e.preventDefault()
         e.stopPropagation()
         if (e.dataTransfer.items[0] == undefined) return
-        dropArea.children[0].innerText = texts.Drag
+        dropAreaBlock.classList.add('active')
+        if (dropArea.children[0].innerText != texts.Drag) dropArea.children[0].innerText = texts.Drag
         dropArea.classList.add('show')
     }
 
     function notDragging(e) {
         e.preventDefault()
         e.stopPropagation()
-        dropArea.classList.remove('show')
+        if (e.target == dropAreaBlock) {
+            dropArea.classList.remove('show')
+            dropAreaBlock.classList.remove('active')
+        }
     }
-    document.addEventListener('dragleave', notDragging, false)
     document.body.addEventListener('drop', (e) => {
         e.preventDefault()
         if (e.dataTransfer.files.length == 0) {
@@ -1625,24 +1619,14 @@
                 return res.json()
             })
             .then(result => {
-                result.forEach(e => {
-                    const time = e.date.split(" ")[1]
-                    const date = e.date.split(" ")[0]
-
-                    const h = time.split(":")[0]
-                    const m = time.split(":")[1]
-                    const s = time.split(":")[2]
-
-                    const d = date.split("/")[0]
-                    const mo = date.split("/")[1]
-                    const y = date.split("/")[2]
-
-                    const jsDate = new Date(y, String(parseInt(mo) - 1), d, h, m, s)
-
+                for (e of result) {
+                    const time = e.date.split(" ")[1].split(":")
+                    const date = e.date.split(" ")[0].split("/")
+                    const jsDate = new Date(date[2], String(parseInt(date[1]) - 1), date[0], time[0], time[1], time[2])
                     files.push(
                         new File(e.id, e.name, e.type, (parseFloat(e.size) / 1024).toFixed(2) + ' KB', jsDate, e.path, e.categoryId)
                     )
-                })
+                }
                 renderAll()
                 uploading.classList.remove('show')
                 const successFileCount = result.reduce((prev, cur) => {

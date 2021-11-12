@@ -92,7 +92,7 @@ body {
 }
 
 .folders {
-    border-top: 1px solid var(--border-main);
+    border-bottom: 1px solid var(--border-main);
 }
 
 
