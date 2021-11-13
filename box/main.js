@@ -1089,8 +1089,12 @@
                 }
 
                 if (types.img.includes(files[selectedIndex].type.toLowerCase())) {
-                    el = document.createElement('img')
-                    el.src = files[selectedIndex].path
+                    const image = document.createElement('img')
+                    el = document.createElement('div')
+                    el.classList.add('image')
+                    image.src = files[selectedIndex].path
+                    el.appendChild(image)
+                    setTimeout(() => imgLens(image), 100)
                 } else if (types.video.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('video')
                     el.src = files[selectedIndex].path
@@ -1545,6 +1549,7 @@
     function dragging(e) {
         e.preventDefault()
         e.stopPropagation()
+        if (document.querySelector('.backdrop')) return
         if (e.dataTransfer.items[0] == undefined) return
         dropAreaBlock.classList.add('active')
         if (dropArea.children[0].innerText != texts.Drag) dropArea.children[0].innerText = texts.Drag
@@ -1559,8 +1564,15 @@
             dropAreaBlock.classList.remove('active')
         }
     }
+
+    setTimeout(() => {
+        dropAreaBlock.classList.remove('active')
+        dropArea.classList.remove('show')
+    }, 100)
+
     document.body.addEventListener('drop', (e) => {
         e.preventDefault()
+        if (document.querySelector('.backdrop')) return
         if (e.dataTransfer.files.length == 0) {
             if (e.target.classList.contains('folder') || e.target.parentElement.classList.contains('folder')) {
                 const spinner = document.createElement('div')
@@ -1742,6 +1754,70 @@
         newfolder.appendChild(form)
         backdrop.appendChild(newfolder)
         document.body.appendChild(backdrop)
+    }
+
+
+    function imgLens(img) {
+        let zoom = 3
+        const lens = document.createElement('div')
+        lens.className = 'lens'
+        lens.style.backgroundImage = `url(${img.src})`
+        lens.style.backgroundRepeat = 'no-repeat'
+        lens.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`
+        const bw = 5
+        let w = lens.offsetWidth / 2
+        let h = lens.offsetHeight / 2
+        lens.addEventListener('mousemove', move)
+        img.addEventListener('mousemove', move)
+
+        img.addEventListener('mousedown', (e) => {
+            e.preventDefault()
+            img.parentElement.insertBefore(lens, img)
+            w = lens.offsetWidth / 2
+            h = lens.offsetHeight / 2
+            move(e)
+            // document.body.style.overflow = 'hidden'
+        })
+        document.querySelector('.backdrop').addEventListener('mouseup', () => {
+            try {
+                img.parentElement.removeChild(lens)
+            } catch (e) {}
+            // document.body.style = ''
+        })
+
+        function move(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            const pos = getMousePosition(e)
+            const x = clamp(pos.x, w / zoom, img.width - (w / zoom))
+            const y = clamp(pos.y, h / zoom, img.height - (h / zoom))
+            lens.style.left = `${x - w}px`
+            lens.style.top = `${y - h}px`
+            lens.style.backgroundPosition = `-${(x * zoom) - w + bw}px -${(y * zoom) - h + bw}px`
+        }
+
+        function getMousePosition(e) {
+            const rect = img.getBoundingClientRect()
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            }
+        }
+
+        lens.onwheel = (e) => {
+            e.preventDefault()
+            if (e.deltaY < 0) {
+                zoom = Math.min(10, zoom + .25)
+            } else {
+                zoom = Math.max(1.25, zoom - .25)
+            }
+            lens.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`
+            move(e)
+        }
+    }
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max)
     }
 
     newFolderBtn.onclick = newFolder

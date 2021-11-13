@@ -1239,14 +1239,32 @@ video.visualize {
     box-shadow: var(--main-shadow);
 }
 
-img.visualize {
+.image.visualize {
     user-select: none;
-    pointer-events: none;
     height: 80vmin;
     width: 80vmin;
     object-fit: contain;
     max-width: 1000px;
     max-height: 1000px;
+    opacity: 0;
+    animation: opacity 0.2s ease forwards;
+    position: relative;
+}
+
+.visualize img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .visualize.empty {
@@ -1345,4 +1363,13 @@ footer a {
 
 .dropdown ion-icon {
     font-size: 1.7rem;
+}
+
+.lens {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    z-index: 1000;
+    border: 2px solid black;
 }
