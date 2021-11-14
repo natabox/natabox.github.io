@@ -1,3 +1,10 @@
+import File, {
+    types,
+    visualizable
+} from '../file.js'
+
+import Folder from '../folder.js'
+
 (() => {
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com']
     const url = urls[1]
@@ -220,16 +227,39 @@
                 }
 
                 if (types.img.includes(files[selectedIndex].type.toLowerCase())) {
-                    el = document.createElement('img')
-                    el.src = files[selectedIndex].path
+                    const image = document.createElement('img')
+                    el = document.createElement('div')
+                    el.classList.add('image')
+                    image.src = files[selectedIndex].path
+                    el.appendChild(image)
+                    setTimeout(() => imgLens(image), 100)
                 } else if (types.video.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('video')
                     el.src = files[selectedIndex].path
                     el.setAttribute('type', 'video/' + files[selectedIndex].type.toLowerCase())
                     el.setAttribute('controls', 'true')
-                } else if (files[selectedIndex].type.toLowerCase() == 'pdf' || files[selectedIndex].type.toLowerCase() == 'txt') {
-                    el = document.createElement('iframe')
-                    el.src = files[selectedIndex].path
+                } else if (visualizable.includes(files[selectedIndex].type.toLowerCase())) {
+                    if (files[selectedIndex].type == 'pdf') {
+                        el = document.createElement('iframe')
+                        el.src = files[selectedIndex].path
+                    } else {
+                        const spinner = document.createElement('div')
+                        spinner.className = 'spinner'
+                        el = document.createElement('div')
+                        el.classList.add('text')
+                        el.appendChild(spinner)
+                        fetch(files[selectedIndex].path, {
+                                headers: {
+                                    'cache-control': 'no-cache'
+                                }
+                            })
+                            .then(res => res.text())
+                            .then(txt => {
+                                el.removeChild(spinner)
+                                el.innerText = txt
+                            })
+                            .catch(err => console.error(err))
+                    }
                 } else if (types.audio.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('audio')
                     el.src = files[selectedIndex].path
@@ -321,6 +351,69 @@
         document.addEventListener('click', () => {
             successEl.remove()
         })
+    }
+
+    function imgLens(img) {
+        let zoom = 3
+        const lens = document.createElement('div')
+        lens.className = 'lens'
+        lens.style.backgroundImage = `url(${img.src})`
+        lens.style.backgroundRepeat = 'no-repeat'
+        lens.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`
+        const bw = 5
+        let w = lens.offsetWidth / 2
+        let h = lens.offsetHeight / 2
+        lens.addEventListener('mousemove', move)
+        img.addEventListener('mousemove', move)
+
+        img.addEventListener('mousedown', (e) => {
+            e.preventDefault()
+            img.parentElement.insertBefore(lens, img)
+            w = lens.offsetWidth / 2
+            h = lens.offsetHeight / 2
+            move(e)
+            // document.body.style.overflow = 'hidden'
+        })
+        document.querySelector('.backdrop').addEventListener('mouseup', () => {
+            try {
+                img.parentElement.removeChild(lens)
+            } catch (e) {}
+            // document.body.style = ''
+        })
+
+        function move(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            const pos = getMousePosition(e)
+            const x = clamp(pos.x, w / zoom, img.width - (w / zoom))
+            const y = clamp(pos.y, h / zoom, img.height - (h / zoom))
+            lens.style.left = `${x - w}px`
+            lens.style.top = `${y - h}px`
+            lens.style.backgroundPosition = `-${(x * zoom) - w + bw}px -${(y * zoom) - h + bw}px`
+        }
+
+        function getMousePosition(e) {
+            const rect = img.getBoundingClientRect()
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            }
+        }
+
+        lens.onwheel = (e) => {
+            e.preventDefault()
+            if (e.deltaY < 0) {
+                zoom = Math.min(10, zoom + .25)
+            } else {
+                zoom = Math.max(1.25, zoom - .25)
+            }
+            lens.style.backgroundSize = `${img.width * zoom}px ${img.height * zoom}px`
+            move(e)
+        }
+    }
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max)
     }
 
 

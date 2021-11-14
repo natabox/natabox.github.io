@@ -1,3 +1,11 @@
+import File, {
+    types,
+    visualizable
+} from './file.js'
+
+import Folder from './folder.js'
+
+
 (() => {
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com', 'https://ec2-18-230-154-13.sa-east-1.compute.amazonaws.com:8080']
     const url = urls[1]
@@ -490,7 +498,7 @@
                 return res.json()
             })
             .then(result => {
-                for (x of result) {
+                for (const x of result) {
                     const time = x.date.split(" ")[1].split(":")
                     const date = x.date.split(" ")[0].split("/")
                     const jsDate = new Date(date[2], String(parseInt(date[1]) - 1), date[0], time[0], time[1], time[2])
@@ -1101,7 +1109,7 @@
                     el.setAttribute('type', 'video/' + files[selectedIndex].type.toLowerCase())
                     el.setAttribute('controls', 'true')
                 } else if (visualizable.includes(files[selectedIndex].type.toLowerCase())) {
-                    if (this.type == 'pdf') {
+                    if (files[selectedIndex].type == 'pdf') {
                         el = document.createElement('iframe')
                         el.src = files[selectedIndex].path
                     } else {
@@ -1149,6 +1157,7 @@
                             .then(txt => {
                                 el.removeChild(spinner)
                                 editor.setValue(txt)
+                                editor.refresh()
                                 backdrop.appendChild(saveBtn)
                             })
                             .catch(err => console.error(err))
@@ -1546,6 +1555,12 @@
 
     const dropAreaBlock = document.querySelector('.drop-area')
 
+    dropArea.onclick = () => {
+        dropArea.classList.remove('show')
+        dropAreaBlock.classList.remove('active')
+    }
+    dropAreaBlock.onclick = dropArea.onclick
+
     function dragging(e) {
         e.preventDefault()
         e.stopPropagation()
@@ -1631,7 +1646,7 @@
                 return res.json()
             })
             .then(result => {
-                for (e of result) {
+                for (const e of result) {
                     const time = e.date.split(" ")[1].split(":")
                     const date = e.date.split(" ")[0].split("/")
                     const jsDate = new Date(date[2], String(parseInt(date[1]) - 1), date[0], time[0], time[1], time[2])

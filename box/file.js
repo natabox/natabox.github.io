@@ -1,4 +1,4 @@
-const types = {
+export const types = {
     img: ['png', 'jpg', 'jpeg', 'jfif', 'ico', 'svg', 'gif', 'tif', 'tiff', 'bmp'],
     video: ['mp4', 'mov', 'wmv', 'avi', 'mkv', 'webp', 'webm'],
     audio: ['m4a', 'mp3', 'wav', 'wma', 'ogg', 'aac'],
@@ -12,13 +12,13 @@ const types = {
     ],
     txt: ['txt', 'bib', 'readme']
 }
-const visualizable = ['pdf'].concat(types.code, types.txt)
+export const visualizable = ['pdf'].concat(types.code, types.txt)
 const notVisualizable = ['md', 'markdown', 'jar']
 for (let i = 0; i < notVisualizable.length; i++) {
     visualizable.splice(visualizable.indexOf(notVisualizable[i]), 1)
 }
 
-class File {
+export default class File {
     id
     name
     type

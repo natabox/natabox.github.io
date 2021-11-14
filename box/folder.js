@@ -1,4 +1,4 @@
-class Folder {
+export default class Folder {
     id
     name
     element

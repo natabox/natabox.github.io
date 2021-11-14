@@ -926,15 +926,12 @@ input[name="upload"] {
 }
 
 header {
-    height: 80px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    border-bottom: 1px solid var(--file-border)
-        /* hsl(0 0% 70% / 50%) */
-    ;
+    border-bottom: 1px solid var(--file-border);
     gap: 20px;
-    padding: 0 20px;
-    /* box-shadow: var(--main-shadow); */
+    padding: 15px 20px;
 }
 
 header .search {
@@ -944,7 +941,7 @@ header .search {
     align-items: center;
     font-size: 2rem;
     position: relative;
-    flex: 1;
+    flex: 1 1;
     max-width: 600px;
 }
 
@@ -1372,4 +1369,20 @@ footer a {
     border-radius: 50%;
     z-index: 1000;
     border: 2px solid black;
+}
+
+@media (max-width: 550px) {
+
+    .drop-area,
+    .drop {
+        display: none;
+    }
+
+    .break {
+        flex-basis: 100%;
+    }
+
+    .logout {
+        margin-left: auto;
+    }
 }
