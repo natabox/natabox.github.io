@@ -108,10 +108,9 @@ form button.submit:hover {
 }
 
 img {
-    width: 100%;
-    max-width: 110px;
-    background-color: var(--title-alt);
-    border-radius: var(--small-roundness);
+    width: 150px;
+    /* background-color: var(--title-alt); */
+    margin-bottom: 30px;
 }
 
 .error {

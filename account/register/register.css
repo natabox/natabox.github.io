@@ -57,10 +57,7 @@ header>a:hover {
 }
 
 header img {
-    width: 100%;
-    max-width: 75px;
-    background-color: var(--title-alt);
-    border-radius: var(--small-roundness);
+    width: 100px;
 }
 
 span.welcome {

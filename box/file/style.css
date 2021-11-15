@@ -32,14 +32,14 @@ button {
     align-items: center;
 }
 
-button::before {
-    content: '';
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    height: 35px;
-    width: 35px;
-    display: inline-block;
-    margin: 0 20px 0 0;
-    background-image: url(../assets/img/icons/download.png);
-}
+/* button::before { */
+/* content: ''; */
+/* background-repeat: no-repeat; */
+/* background-size: contain; */
+/* background-position: center; */
+/* height: 35px; */
+/* width: 35px; */
+/* display: inline-block; */
+/* margin: 0 20px 0 0; */
+/* background-image: url(../assets/img/icons/download.png); */
+/* } */
