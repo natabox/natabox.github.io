@@ -232,6 +232,13 @@ import Folder from '../folder.js'
                     el.classList.add('image')
                     image.src = files[selectedIndex].path
                     el.appendChild(image)
+                    if (image.width >= image.height) {
+                        image.style.width = '80vmin'
+                        image.style.maxWidth = '1000px'
+                    } else {
+                        image.style.height = '80vmin'
+                        image.style.maxHeight = '1000px'
+                    }
                     setTimeout(() => imgLens(image), 100)
                 } else if (types.video.includes(files[selectedIndex].type.toLowerCase())) {
                     el = document.createElement('video')
