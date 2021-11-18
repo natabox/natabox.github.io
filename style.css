@@ -177,7 +177,7 @@ ion-icon {
     text-decoration: none;
     color: var(--main-font-color);
     margin: 0 auto;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     padding: 10px 15px;
     background-color: var(--btn);
     border: 2px solid hsl(137 57% 47%);

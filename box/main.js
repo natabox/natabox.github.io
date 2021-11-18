@@ -24,7 +24,8 @@ import Folder from './folder.js'
     const orderSelect = document.querySelector('select[name="order"]')
     const previewInput = document.querySelector('input[name="preview"]')
     const pathEl = document.querySelector('.path')
-    const backBtn = document.querySelector('.path ion-icon')
+    const backBtn = document.querySelector('.path ion-icon[name="arrow-back"]')
+    const refreshBtn = document.querySelector('.path ion-icon[name="refresh"]')
     const maxFileSize = 2048
     const newFolderBtn = document.querySelector('.createfolder')
     const dropdown = document.querySelector('.dropdown')
@@ -51,6 +52,15 @@ import Folder from './folder.js'
             }
         }
     })
+
+    refreshBtn.onclick = () => {
+        const spinner = document.createElement('div')
+        spinner.className = 'loading'
+        foldersContainer.innerHTML = ''
+        filesContainer.innerHTML = ''
+        foldersContainer.appendChild(spinner)
+        getAllFiles()
+    }
 
     let path = "/"
 
