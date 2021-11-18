@@ -33,7 +33,7 @@ import Folder from '../folder.js'
         foldersContainer.innerHTML = ''
         const spinner = document.createElement('div')
         spinner.className = 'loading'
-        filesContainer.appendChild(spinner)
+        foldersContainer.appendChild(spinner)
         let rem = 0
         for (let i = path.length - 2; i >= 0; i--) {
             if (path.charAt(i) == '/') {
@@ -97,8 +97,8 @@ import Folder from '../folder.js'
         const loading = document.createElement('div')
         loading.className = 'loading'
         filesContainer.innerHTML = ''
-        filesContainer.appendChild(loading)
         foldersContainer.innerHTML = ''
+        foldersContainer.appendChild(loading)
         const param = window.location.href.split('?=')[1].replaceAll('/', '')
         let loaded = false
         const pathArr = path.split('/')

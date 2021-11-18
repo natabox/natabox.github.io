@@ -18,7 +18,7 @@
 }
 
 body {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: var(--bg-main);
@@ -26,16 +26,23 @@ body {
     overflow-x: hidden;
 }
 
-.files>.loading {
+body>div.container {
+    flex: 1;
+    overflow-y: auto;
+    /* scrollbar-width: thin; */
+}
+
+.loading {
     width: 100%;
     position: absolute;
     top: 0;
     left: 0;
     height: 2px;
     z-index: 2;
+    overflow: hidden;
 }
 
-.files>.loading::after {
+.loading::after {
     content: '';
     position: absolute;
     left: 0;
@@ -68,12 +75,11 @@ body {
 }
 
 .path {
-    padding: 0 10px;
+    padding: 2px 10px;
     display: flex;
     align-items: center;
     font-size: var(--main-font-size);
     gap: 20px;
-    min-height: 40px;
     border-bottom: 1px solid var(--border-main);
 }
 
@@ -860,7 +866,7 @@ input[name="upload"] {
     align-items: center;
     padding: 0 15px;
     height: 50px;
-    font-size: 1.3rem;
+    font-size: var(--main-font-size);
     background-color: hsl(var(--upload-bg));
     border-radius: var(--main-roundness);
     box-shadow: var(--blue-shadow);
@@ -907,17 +913,15 @@ input[name="upload"] {
     min-height: 40px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--file-border)
-        /* hsl(0 0% 70% / 50%) */
-    ;
+    border-bottom: 1px solid var(--file-border);
     gap: 20px;
     padding: 0 5px;
     box-shadow: var(--main-shadow);
-    font-size: 1rem;
+    font-size: 0.91rem;
 }
 
 .options select {
-    font-size: 1rem;
+    font-size: inherit;
     border-radius: var(--main-roundness);
     border: 1px solid var(--file-border);
     padding: 5px 10px;
@@ -939,7 +943,7 @@ header .search {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
+    font-size: var(--main-font-size);
     position: relative;
     flex: 1 1;
     max-width: 600px;
@@ -950,10 +954,11 @@ header .search ion-icon {
     top: 50%;
     transform: translateY(-50%);
     left: 10px;
+    font-size: var(--bigger-font-size);
 }
 
 header .search input {
-    font-size: 1.3rem;
+    font-size: inherit;
     padding: 10px 10px 10px 50px;
     border-radius: var(--main-roundness);
     width: 100%;
@@ -1284,7 +1289,7 @@ video.visualize {
 footer {
     text-align: justify;
     margin-top: auto;
-    padding: 20px;
+    padding: 15px 20px;
     font-size: var(--s-font-size);
     border-top: 1px solid var(--border-main);
 }

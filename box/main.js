@@ -60,7 +60,7 @@ import Folder from './folder.js'
         foldersContainer.innerHTML = ''
         const spinner = document.createElement('div')
         spinner.className = 'loading'
-        filesContainer.appendChild(spinner)
+        foldersContainer.appendChild(spinner)
         let rem = 0
         for (let i = path.length - 2; i >= 0; i--) {
             if (path.charAt(i) == '/') {
@@ -1246,7 +1246,7 @@ import Folder from './folder.js'
                 foldersContainer.innerHTML = ''
                 const spinner = document.createElement('div')
                 spinner.className = 'loading'
-                filesContainer.appendChild(spinner)
+                foldersContainer.appendChild(spinner)
                 updatePath()
                 getAllFiles()
             }
