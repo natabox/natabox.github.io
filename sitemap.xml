@@ -17,6 +17,16 @@
   <lastmod>2021-11-17T17:32:19+00:00</lastmod>
   <priority>0.80</priority>
 </url>
+<url>
+  <loc>https://natabox.github.io/account/</loc>
+  <lastmod>2021-11-17T17:32:19+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://natabox.github.io/account/register/</loc>
+  <lastmod>2021-11-17T17:32:19+00:00</lastmod>
+  <priority>0.70</priority>
+</url>
 
 
 </urlset>
