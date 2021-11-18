@@ -46,7 +46,7 @@ export default class File {
         img.className = 'file__img'
 
         function setBg(imgname) {
-            img.style = `background-image: url(${document.title.includes('folder') ? '../' : ''}assets/img/types/${imgname}.png)`
+            img.style = `background-image: url(${document.title.includes('folder') ? '../' : ''}assets/img/types/webp/${imgname}.webp)`
         }
         if (types.img.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
@@ -94,7 +94,7 @@ export default class File {
                 testImg.onload = () => {
                     setBg(this.type)
                 }
-                testImg.src = `${document.title.includes('folder') ? '../' : ''}assets/img/types/${this.type}.png`
+                testImg.src = `${document.title.includes('folder') ? '../' : ''}assets/img/types/webp/${this.type}.webp`
             }
         }
         div.appendChild(img)
