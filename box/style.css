@@ -17,6 +17,28 @@
     --alt-roundness: 20px;
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--bg-alt);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--upload-bg));
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--upload-bg-alt));
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--upload-bg)) var(--bg-alt);
+}
+
 body {
     height: 100vh;
     display: flex;
