@@ -12,6 +12,11 @@ body {
     scroll-behavior: smooth;
 }
 
+#contato a{
+	text-decoration: none;
+	color: lightblue;
+}
+
 /* header config */
 header {
     display: flex;
