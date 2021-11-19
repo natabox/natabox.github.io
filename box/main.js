@@ -79,7 +79,7 @@ import Folder from './folder.js'
             }
         }
         path = path.substring(0, rem + 1)
-        let pathTxt = pathEl.children[1].innerText
+        let pathTxt = pathEl.children[2].innerText
         rem = 0
         for (let i = pathTxt.length - 2; i >= 0; i--) {
             if (pathTxt.charAt(i) == '/') {
@@ -87,7 +87,7 @@ import Folder from './folder.js'
                 break
             }
         }
-        pathEl.children[1].innerText = pathTxt.substring(0, rem + 1)
+        pathEl.children[2].innerText = pathTxt.substring(0, rem + 1)
         getAllFiles()
     }
 
@@ -1363,7 +1363,7 @@ import Folder from './folder.js'
             }
             return true
         })
-        pathEl.children[1].innerText += name + "/"
+        pathEl.children[2].innerText += name + "/"
     }
 
     function findObject() {
