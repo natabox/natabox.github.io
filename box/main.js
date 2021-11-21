@@ -19,7 +19,9 @@ import Folder from './folder.js'
     const dropArea = document.querySelector('.drop')
     const logoutBtn = document.querySelector('.logout')
     const uploading = document.querySelector('.uploading')
+    const uploadingProgress = uploading.querySelector('progress')
     const downloading = document.querySelector('.downloading')
+    const downloadingProgress = downloading.querySelector('progress')
     const sortSelect = document.querySelector('select[name="sort"]')
     const orderSelect = document.querySelector('select[name="order"]')
     const previewInput = document.querySelector('input[name="preview"]')
@@ -1387,8 +1389,83 @@ import Folder from './folder.js'
     }
 
     function downloadFile() {
+        downloadingProgress.value = 0
+        downloading.children[1].innerText = 'Downloading... 0%'
+
         downloading.classList.add('show')
         fetch(files[selectedIndex].path)
+            .then(response => {
+                const total = response.headers.get(response.headers.get('content-encoding') ? 'x-file-size' : 'content-length')
+                let loaded = 0
+
+                return new Response(
+                    new ReadableStream({
+                        start(controller) {
+                            const reader = response.body.getReader()
+
+                            read()
+
+                            function read() {
+                                reader.read().then(({
+                                    done,
+                                    value
+                                }) => {
+                                    if (done) {
+                                        controller.close()
+                                        return
+                                    }
+                                    loaded += value.byteLength
+                                    progress({
+                                        loaded,
+                                        total
+                                    })
+                                    controller.enqueue(value)
+                                    read()
+                                }).catch(error => {
+                                    console.error(error)
+                                    controller.error(error)
+                                })
+                            }
+                        }
+                    })
+                )
+            })
+            .then(data => data.blob())
+            .then(blob => {
+                const link = document.createElement('a')
+                link.href = URL.createObjectURL(blob)
+                console.log(link.href)
+                link.target = '_blank'
+                link.download = files[selectedIndex].name
+                link.click()
+                downloading.classList.remove('show')
+                showSuccess('Downloaded')
+            })
+            .catch(error => {
+                console.error(error)
+            })
+
+        function progress({
+            loaded,
+            total
+        }) {
+            downloadingProgress.value = loaded / total
+            downloading.children[1].innerText = 'Downloading... ' + Math.round(loaded / total * 100) + '%'
+        }
+        /* .then(blob => {
+            downloading.classList.remove('show')
+            const link = document.createElement('a')
+            link.href = URL.createObjectURL(blob)
+            link.target = '_blank'
+            link.download = files[selectedIndex].name
+            link.click()
+            showSuccess('Downloaded')
+        })
+        .catch(e => {
+            downloading.classList.remove('show')
+            showError(texts.Try)
+        }) */
+        /* fetch(files[selectedIndex].path)
             .then(response => response.blob())
             .then(blob => {
                 downloading.classList.remove('show')
@@ -1402,7 +1479,7 @@ import Folder from './folder.js'
             .catch(e => {
                 downloading.classList.remove('show')
                 showError(texts.Try)
-            })
+            }) */
     }
 
     function deleteFolder() {
@@ -1646,6 +1723,8 @@ import Folder from './folder.js'
         }
 
         document.querySelectorAll('.info').forEach(e => e.remove())
+        uploading.children[1].innerText = 'Uploading... 0%'
+        uploadingProgress.value = 0
         uploading.classList.add('show')
         const acc = JSON.parse(decrypt(localStorage.getItem('account')))
         const formData = new FormData()
@@ -1653,13 +1732,13 @@ import Folder from './folder.js'
             formData.append(`file[]`, recievedFiles[i], recievedFiles[i].name)
         }
         formData.append('folder', path == "/" ? '-1' : path.split('/')[path.split('/').length - 2])
-        fetch(url + '/files/upload', {
+        /* fetch(url + '/files/upload', {
                 method: 'POST',
                 headers: {
                     User: acc.email,
                     Password: acc.password
                 },
-                body: formData,
+                body: formData
             })
             .then(res => {
                 return res.json()
@@ -1684,7 +1763,48 @@ import Folder from './folder.js'
                 console.error('Error:', err)
                 uploading.classList.remove('show')
                 showError(texts.Limit)
-            })
+            }) */
+
+        const request = new XMLHttpRequest()
+        request.open('POST', url + '/files/upload')
+
+        request.setRequestHeader('User', acc.email)
+        request.setRequestHeader('Password', acc.password)
+
+        request.upload.addEventListener('progress', (e) => {
+            uploadingProgress.value = e.loaded / e.total
+            uploading.children[1].innerText = 'Uploading... ' + Math.round(e.loaded / e.total * 100) + '%'
+            if (e.loaded == e.total) {
+                uploading.children[1].innerText = 'Processing...'
+                return
+            }
+        })
+
+        request.onerror = (err) => {
+            console.error('Error:', err)
+            uploading.classList.remove('show')
+            showError(texts.Limit)
+        }
+
+        request.onload = () => {
+            const result = JSON.parse(request.response)
+            for (const e of result) {
+                const time = e.date.split(" ")[1].split(":")
+                const date = e.date.split(" ")[0].split("/")
+                const jsDate = new Date(date[2], String(parseInt(date[1]) - 1), date[0], time[0], time[1], time[2])
+                files.push(
+                    new File(e.id, e.name, e.type, (parseFloat(e.size) / 1024).toFixed(2) + ' KB', jsDate, e.path, e.categoryId)
+                )
+            }
+            renderAll()
+            uploading.classList.remove('show')
+            const successFileCount = result.reduce((prev, cur) => {
+                return cur != null ? prev + 1 : prev
+            }, 0)
+            showSuccess(`${successFileCount} ${successFileCount <= 1 ? 'file' : 'files'} uploaded!`)
+        }
+
+        request.send(formData)
     }
 
     function createIcon(name) {
