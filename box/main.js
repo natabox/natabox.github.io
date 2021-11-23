@@ -5,7 +5,6 @@ import File, {
 
 import Folder from './folder.js'
 
-
 (() => {
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com', 'https://ec2-18-230-154-13.sa-east-1.compute.amazonaws.com:8080']
     const url = urls[1]
@@ -55,7 +54,10 @@ import Folder from './folder.js'
         }
     })
 
+    let refreshing = false
     refreshBtn.onclick = () => {
+        if (refreshing) return
+        refreshing = true
         const spinner = document.createElement('div')
         spinner.className = 'loading'
         foldersContainer.innerHTML = ''
@@ -64,7 +66,18 @@ import Folder from './folder.js'
         getAllFiles()
     }
 
-    let path = "/"
+    let path = '/'
+    if (location.href.includes('?')) {
+        path = location.href.split('?')[1]
+        if (path.includes('&')) {
+            pathEl.children[2].innerText = path.split('&')[1].replace('names=', '')
+            path = path.split('&')[0].replace('ids=', '')
+        } else {
+            path = '/'
+        }
+    }
+    document.title = 'Natabox - ' + pathEl.children[2].innerText
+
 
     backBtn.onclick = () => {
         if (path == '/') return
@@ -90,6 +103,8 @@ import Folder from './folder.js'
             }
         }
         pathEl.children[2].innerText = pathTxt.substring(0, rem + 1)
+        location.href = '#?ids=' + path + '&names=' + pathEl.children[2].innerText
+        document.title = 'Natabox - ' + pathEl.children[2].innerText
         getAllFiles()
     }
 
@@ -518,7 +533,10 @@ import Folder from './folder.js'
                         new File(x.id, x.name, x.type, (parseFloat(x.size) / 1024).toFixed(2) + ' KB', jsDate, x.path, x.categoryId)
                     )
                 }
-                if (loaded) renderAll()
+                if (loaded) {
+                    renderAll()
+                    refreshing = false
+                }
                 loaded = true
             })
             .catch(err => {
@@ -566,7 +584,10 @@ import Folder from './folder.js'
                         return 0
                     }
                 })
-                if (loaded) renderAll()
+                if (loaded) {
+                    renderAll()
+                    refreshing = false
+                }
                 loaded = true
             })
             .catch(error => {
@@ -1366,6 +1387,8 @@ import Folder from './folder.js'
             return true
         })
         pathEl.children[2].innerText += name + "/"
+        location.href = '#?ids=' + path + '&names=' + pathEl.children[2].innerText
+        document.title = 'Natabox - ' + pathEl.children[2].innerText
     }
 
     function findObject() {
