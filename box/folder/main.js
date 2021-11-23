@@ -1,6 +1,7 @@
 import File, {
     types,
-    visualizable
+    visualizable,
+    docs
 } from '../file.js'
 
 import Folder from '../folder.js'
@@ -271,6 +272,9 @@ import Folder from '../folder.js'
                     el = document.createElement('audio')
                     el.src = files[selectedIndex].path
                     el.setAttribute('controls', 'true')
+                } else if (docs.includes(files[selectedIndex].type.toLowerCase())) {
+                    el = document.createElement('iframe')
+                    el.src = `https://view.officeapps.live.com/op/embed.aspx?src=${files[selectedIndex].path}`
                 } else {
                     el = document.createElement('div')
                     el.innerText = 'Nenhuma visualização disponível'

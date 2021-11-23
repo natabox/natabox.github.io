@@ -13,6 +13,7 @@ export const types = {
     txt: ['txt', 'bib', 'readme']
 }
 export const visualizable = ['pdf'].concat(types.code, types.txt)
+export const docs = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']
 const notVisualizable = ['md', 'markdown', 'jar']
 for (let i = 0; i < notVisualizable.length; i++) {
     visualizable.splice(visualizable.indexOf(notVisualizable[i]), 1)
