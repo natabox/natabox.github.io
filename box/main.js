@@ -2048,6 +2048,13 @@ import Folder from './folder.js'
         return Math.min(Math.max(value, min), max)
     }
 
+    setInterval(() => {
+        if (localStorage.getItem('account') == null || localStorage.getItem('account') == '') {
+            localStorage.removeItem('account')
+            window.location.href = window.location.href.replace('/box', '/account')
+        }
+    }, 1000)
+
     newFolderBtn.onclick = newFolder
 
     getAllFiles()
