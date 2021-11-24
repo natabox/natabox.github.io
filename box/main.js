@@ -2049,6 +2049,7 @@ import Folder from './folder.js'
     }
 
     function checkLogedIn() {
+        console.log('testing')
         if (localStorage.getItem('account') == null || localStorage.getItem('account') == '') {
             localStorage.removeItem('account')
             window.location.href = window.location.href.replace('/box', '/account')
