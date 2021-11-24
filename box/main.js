@@ -7,18 +7,19 @@ import File, {
 import Folder from './folder.js'
 
 
-function checkLogedIn() {
-    console.log('testing')
-    if (localStorage.getItem('account') == null || localStorage.getItem('account') == '') {
-        localStorage.removeItem('account')
-        window.location.href = window.location.href.replace('/box', '/account')
-    }
-}
-checkLogedIn()
-setInterval(checkLogedIn, 1000)
 
 
 (() => {
+    function checkLogedIn() {
+        if (localStorage.getItem('account') == null || localStorage.getItem('account') == '') {
+            localStorage.removeItem('account')
+            window.location.href = window.location.href.replace('/box', '/account')
+        }
+    }
+    checkLogedIn()
+    setInterval(checkLogedIn, 1000)
+
+
     const urls = ['http://localhost:3000', 'https://natabox.herokuapp.com', 'https://ec2-18-230-154-13.sa-east-1.compute.amazonaws.com:8080']
     const url = urls[1]
 
