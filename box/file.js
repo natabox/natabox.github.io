@@ -71,9 +71,11 @@ export default class File {
                 img.appendChild(playCircle)
                 this.element.addEventListener('mouseover', () => {
                     videoEl.currentTime = 0
-                    videoEl.play()
                     videoEl.muted = true
                     videoEl.loop = true
+                    try {
+                        videoEl.play()
+                    } catch (e) {}
                 })
                 this.element.addEventListener('mouseleave', () => {
                     videoEl.currentTime = 0

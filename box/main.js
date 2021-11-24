@@ -1226,8 +1226,24 @@ import Folder from './folder.js'
             }
 
             e.addEventListener('contextmenu', createContextMenu)
-            e.addEventListener('touchend', createContextMenu)
+            let startTouch
+            let endTouch
+            e.addEventListener('touchend', (e) => {
+                endTouch = e.changedTouches[0]
+                if (Math.abs(startTouch.screenX - endTouch.screenX) < 50 && Math.abs(startTouch.screenY - endTouch.screenY) < 50) {
+                    createContextMenu(e)
+                }
+                if (startTouch.screenX == endTouch.screenX && startTouch.screenY == endTouch.screenY) {}
+            })
             e.addEventListener('dblclick', visualize)
+
+
+            e.addEventListener('touchstart', (e) => {
+                startTouch = e.changedTouches[0]
+                document.querySelectorAll('.context-menu').forEach(e => {
+                    e.remove()
+                })
+            })
 
 
             if (e.children[1].innerText.length <= 22) return
@@ -1461,7 +1477,6 @@ import Folder from './folder.js'
             .then(blob => {
                 const link = document.createElement('a')
                 link.href = URL.createObjectURL(blob)
-                console.log(link.href)
                 link.target = '_blank'
                 link.download = files[selectedIndex].name
                 link.click()
@@ -1734,6 +1749,32 @@ import Folder from './folder.js'
                     .catch(err => {
                         console.error(err)
                     })
+            } else if (e.target.getAttribute('name') == 'arrow-back') {
+                const curFolder = path.split('/')[path.split('/').length - 3]
+                if (curFolder == undefined) return
+                const spinner = document.createElement('div')
+                spinner.className = 'spinner'
+                files[selectedIndex].element.appendChild(spinner)
+                files[selectedIndex].element.classList.add("moving")
+                fetch(`${url}/files/${files[selectedIndex].id}/folder/${curFolder == '' ? -1 : curFolder}`, {
+                        method: 'PUT',
+                        headers: {
+                            User: JSON.parse(decrypt(localStorage.getItem('account'))).email,
+                            Password: JSON.parse(decrypt(localStorage.getItem('account'))).password
+                        }
+                    })
+                    .then(e => {
+                        if (e.status == 403) throw new Error("Folder not found")
+                        return e.json()
+                    })
+                    .then(res => {
+                        getAllFiles()
+                    })
+                    .catch(err => {
+                        getAllFiles()
+                        showError(texts.Try)
+                        console.error(err)
+                    })
             }
             return
         }
@@ -1877,8 +1918,10 @@ import Folder from './folder.js'
         }
         if ((e.key == 'n' || e.key == 'N') && e.shiftKey) {
             if (document.activeElement == searchInput) return
+            if (backdrop.length > 0) return
             e.preventDefault()
             newFolder()
+            return
         }
     })
 
@@ -1915,7 +1958,7 @@ import Folder from './folder.js'
                         Password: JSON.parse(decrypt(localStorage.getItem('account'))).password
                     },
                     body: JSON.stringify({
-                        name: input.value,
+                        name: typeof input.value.replaceAll != 'undefined' ? input.value.replaceAll('/', '') : input.value.replace('/', ''),
                         folderId: path == "/" ? null : path.split('/')[path.split('/').length - 2]
                     })
                 })
@@ -1935,6 +1978,10 @@ import Folder from './folder.js'
         newfolder.appendChild(form)
         backdrop.appendChild(newfolder)
         document.body.appendChild(backdrop)
+        setTimeout(() => {
+            input.select()
+            input.focus()
+        })
     }
 
 
