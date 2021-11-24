@@ -60,10 +60,14 @@ export default class File {
         } else if (types.video.includes(this.type.toLowerCase()) && renderImgs) {
             img.className = 'file__img rendered'
             const videoEl = document.createElement('video')
-            videoEl.loop = true
-            videoEl.muted = true
+            try {
+                videoEl.muted = true
+                videoEl.loop = true
+            } catch (e) {}
             videoEl.onloadeddata = () => {
-                videoEl.currentTime = 0
+                try {
+                    videoEl.currentTime = 0
+                } catch (e) {}
                 img.classList.add('loaded')
                 img.appendChild(videoEl)
                 const playCircle = document.createElement('ion-icon')
@@ -84,7 +88,9 @@ export default class File {
                     } catch (e) {}
                 })
             }
-            videoEl.src = this.path
+            try {
+                videoEl.src = this.path
+            } catch (e) {}
         } else {
             let set = false
             for (const [key, value] of Object.entries(types)) {
