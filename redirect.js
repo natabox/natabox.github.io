@@ -1,0 +1,1 @@
+location.href = location.href.replace("natabox.github.io","technata.netlify.app")
